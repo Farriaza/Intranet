@@ -1,0 +1,115 @@
+{% extends "documentos.html" %}
+
+{% block documentos_content %}
+
+{% if unidad %}
+
+  <!-- TÍTULO UNIDAD -->
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-header fw-semibold">
+      <i class="bi bi-folder2-open me-2"></i>
+      {{ unidad.nombre }}
+    </div>
+  </div>
+
+  <!-- ================= CATEGORÍA: REGLAMENTOS ================= -->
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-header fw-semibold bg-light">
+      📘 Reglamentos, Protocolos e Instructivos
+    </div>
+    <div class="card-body p-0">
+      {% if documentos_por_categoria.reglamentos %}
+        <ul class="list-group list-group-flush">
+          {% for doc in documentos_por_categoria.reglamentos %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <a href="{{ doc.archivo.url }}" target="_blank">
+                <i class="bi bi-file-earmark-text me-2"></i>
+                {{ doc.titulo }}
+              </a>
+              {% if user.is_staff %}
+                <a href="{% url 'eliminar_documento' doc.id %}"
+                   class="btn btn-sm btn-outline-danger">
+                  <i class="bi bi-trash"></i>
+                </a>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <div class="p-3 text-muted">No hay documentos.</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- ================= CATEGORÍA: PROCESOS ================= -->
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-header fw-semibold bg-light">
+      ⚙️ Procesos de Trabajo
+    </div>
+    <div class="card-body p-0">
+      {% if documentos_por_categoria.procesos %}
+        <ul class="list-group list-group-flush">
+          {% for doc in documentos_por_categoria.procesos %}
+            <li class="list-group-item">
+              <a href="{{ doc.archivo.url }}" target="_blank">
+                <i class="bi bi-file-earmark-text me-2"></i>
+                {{ doc.titulo }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <div class="p-3 text-muted">No hay documentos.</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- ================= CATEGORÍA: BIENESTAR ================= -->
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-header fw-semibold bg-light">
+      💚 Bienestar
+    </div>
+    <div class="card-body p-0">
+      {% if documentos_por_categoria.bienestar %}
+        <ul class="list-group list-group-flush">
+          {% for doc in documentos_por_categoria.bienestar %}
+            <li class="list-group-item">
+              <a href="{{ doc.archivo.url }}" target="_blank">
+                <i class="bi bi-file-earmark-text me-2"></i>
+                {{ doc.titulo }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <div class="p-3 text-muted">No hay documentos.</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- ================= FORMULARIO SUBIDA (SOLO STAFF) ================= -->
+  {% if user.is_staff %}
+    <div class="card shadow-sm border-0 mt-4">
+      <div class="card-header fw-semibold">
+        <i class="bi bi-upload me-2"></i>
+        Subir documento
+      </div>
+      <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit" class="btn btn-primary">
+            Subir
+          </button>
+        </form>
+      </div>
+    </div>
+  {% endif %}
+
+{% else %}
+  <div class="alert alert-info">
+    Seleccione una unidad para visualizar sus documentos.
+  </div>
+{% endif %}
+
+{% endblock %}

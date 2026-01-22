@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-5 align-items-center">
+        <div class="col">
+            <h2 class="fw-bold text-dark mb-0">
+                <span class="p-2 bg-primary text-white rounded-3 me-2"><i class="bi bi-grid-3x3-gap"></i></span>
+                Catálogo de Proyectos
+            </h2>
+            <p class="text-muted mt-2">Explora nuestro portafolio de soluciones y activos.</p>
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-primary btn-lg shadow rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#modalProyecto" onclick="prepararCreacion()">
+                <i class="bi bi-plus-lg me-2"></i> Nuevo Proyecto
+            </button>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        {% for p in proyectos_todos %}
+        <div class="col-sm-6 col-lg-4 col-xl-3">
+            <div class="card h-100 border-0 shadow-sm project-card rounded-4 overflow-hidden">
+                <div class="position-absolute top-0 end-0 m-3 z-index-1">
+                    <span class="badge bg-dark rounded-pill px-3">{{ p.estado }}</span>
+                </div>
+                
+                <div class="position-relative cursor-zoom" onclick="verImagen('{{ p.imagen.url|default:'' }}', '{{ p.nombre|escapejs }}')">
+                    {% if p.imagen %}
+                        <img src="{{ p.imagen.url }}" class="card-img-top" style="height: 220px; object-fit: cover;">
+                        <div class="card-img-overlay d-flex align-items-center justify-content-center opacity-0 hover-opacity-100 transition-all bg-dark bg-opacity-25">
+                            <i class="bi bi-zoom-in text-white fs-2"></i>
+                        </div>
+                    {% else %}
+                        <div class="bg-light d-flex align-items-center justify-content-center" style="height: 220px;">
+                            <i class="bi bi-image text-muted opacity-25 fs-1"></i>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="card-body p-4 text-center">
+                    <h5 class="fw-bold mb-2 text-dark">{{ p.nombre }}</h5>
+                    <p class="text-muted small text-truncate-2 mb-3">{{ p.descripcion|default:"Sin descripción disponible." }}</p>
+                    
+                    <div class="d-flex justify-content-center">
+                        <span class="badge bg-info-subtle text-info border border-info-subtle rounded-pill px-3">
+                            <i class="bi bi-person me-1"></i>{{ p.cliente|default:"Disponible" }}
+                        </span>
+                    </div>
+                </div>
+                </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <i class="bi bi-archive text-muted display-1 opacity-25"></i>
+            <p class="text-muted mt-3">No hay proyectos para mostrar en este momento.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="modal fade" id="modalProyecto" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header bg-light border-0 p-4">
+                <h5 class="modal-title fw-bold" id="modalTitle">Nuevo Proyecto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="formProyecto" method="POST" enctype="multipart/form-data" action="{% url 'gestion_catalogo' %}">
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        <div class="col-md-6"><label class="small fw-bold mb-1">Nombre</label>{{ form.nombre }}</div>
+                        <div class="col-md-6"><label class="small fw-bold mb-1">URL Referencia</label>{{ form.url_referencia }}</div>
+                        <div class="col-md-6"><label class="small fw-bold mb-1">Imagen</label>{{ form.imagen }}</div>
+                        <div class="col-md-6"><label class="small fw-bold mb-1">Cliente</label>{{ form.cliente }}</div>
+                        <div class="col-12"><label class="small fw-bold mb-1">Descripción</label>{{ form.descripcion }}</div>
+                        <div class="col-md-4"><label class="small fw-bold mb-1">Estado</label>{{ form.estado }}</div>
+                    </div>
+                    <div class="text-end mt-4">
+                        <button type="submit" class="btn btn-primary rounded-pill px-5 fw-bold shadow">Registrar Proyecto</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content bg-transparent border-0 text-center">
+            <div class="modal-header border-0 justify-content-end">
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <img src="" id="modalImg" class="img-fluid rounded-4 shadow-lg mx-auto">
+            <h4 id="modalImgTitle" class="text-white mt-3 fw-bold"></h4>
+        </div>
+    </div>
+</div>
+
+<style>
+    body { background-color: #f8f9fa; }
+    .project-card { transition: 0.3s ease-in-out; border: 1px solid rgba(0,0,0,0.05) !important; }
+    .project-card:hover { transform: translateY(-10px); box-shadow: 0 1.5rem 3.5rem rgba(0,0,0,0.1) !important; }
+    .cursor-zoom { cursor: zoom-in; }
+    .hover-opacity-100:hover { opacity: 1 !important; }
+    .transition-all { transition: 0.3s; }
+    .text-truncate-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .modal-backdrop.show { backdrop-filter: blur(8px); }
+</style>
+
+<script>
+    function prepararCreacion() {
+        document.getElementById('formProyecto').reset();
+    }
+
+    function verImagen(src, titulo) {
+        if(!src) return;
+        document.getElementById('modalImg').src = src;
+        document.getElementById('modalImgTitle').innerText = titulo;
+        new bootstrap.Modal(document.getElementById('imageModal')).show();
+    }
+</script>
+{% endblock %}

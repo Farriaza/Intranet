@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Panel de Noticias{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+  <h1 class="fw-bold mb-4 text-center">Panel de Noticias</h1>
+
+  <div class="text-end mb-3">
+    <a href="{% url 'agregar_noticia' %}" class="btn btn-primary">
+      <i class="bi bi-plus-circle"></i> Nueva Noticia
+    </a>
+  </div>
+
+  <div class="table-responsive shadow rounded">
+    <table class="table table-bordered align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>Título</th>
+          <th>Categoría</th>
+          <th>Fecha</th>
+          <th>Imagen</th>
+        
+          <th>Link</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        {% for n in noticias %}
+        <tr>
+          <td class="fw-semibold">{{ n.titulo }}</td>
+
+          <td class="fw-semibold">{{ n.get_categoria_display }}</td>
+
+          <td>{{ n.fecha }}</td>
+
+          <td>
+            {% if n.imagen %}
+              <img src="{{ n.imagen.url }}" width="100" class="rounded shadow-sm">
+            {% else %}
+              <span class="text-muted">Sin imagen</span>
+            {% endif %}
+          </td>
+
+          
+
+          <td>
+            {% if n.link %}
+              <a href="{{ n.link }}" target="_blank" class="btn btn-sm btn-outline-primary">Leer más</a>
+            {% else %}
+              <span class="text-muted">No disponible</span>
+            {% endif %}
+          </td>
+
+          <td>
+            <a href="{% url 'editar_noticia' n.id %}" class="btn btn-sm btn-warning me-1">Editar</a>
+            <a href="{% url 'eliminar_noticia' n.id %}" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar esta noticia?')">Eliminar</a>
+          </td>
+
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="7" class="text-center text-muted py-4">No hay noticias registradas.</td>
+        </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+
+</div>
+{% endblock %}

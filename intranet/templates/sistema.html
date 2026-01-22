@@ -1,0 +1,221 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Sistemas{% endblock %}
+{% block page_title %}Sistemas{% endblock %}
+
+{% block content %}
+
+<section class="py-4 bg-light">
+  <div class="container">
+<H3>Presione alguna opción para ver su contenido o utilice el buscador </H3>
+    <!-- BUSCADOR -->
+    <div class="text-center mb-4">
+      <div class="position-relative w-50 mx-auto">
+        <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-secondary"></i>
+        <input type="text" id="buscador"
+               class="form-control ps-5 shadow-sm"
+               placeholder="Buscar sistema..."
+               onkeyup="filtrarItems()">
+      </div>
+    </div>
+
+    <!-- 4 COLUMNAS -->
+    <div class="row g-4">
+
+      <!-- COL 1: REGIONALES -->
+      <div class="col-lg-3 col-md-6">
+        <div class="main-card" onclick="toggleSection('regionales')">
+          <h4 class="main-title">Regionales <i class="bi bi-chevron-down"></i></h4>
+           
+        </div>
+
+        <div id="regionales" class="section-content d-none">
+
+          {% for reg in regionales %}
+          <a href="{{ reg.url }}" target="_blank" class="text-decoration-none text-reset">
+            <div class="hud-card search-item" data-name="{{ reg.nombre }}">
+              <div class="hud-rank small-rank">{{ forloop.counter }}</div>
+              <span class="hud-title small-title">{{ reg.nombre }}</span>
+            </div>
+          </a>
+          {% empty %}
+            <p class="text-muted text-center">No hay regionales registradas.</p>
+          {% endfor %}
+
+        </div>
+      </div>
+
+      <!-- COL 2: NACIONALES -->
+      <div class="col-lg-3 col-md-6">
+        <div class="main-card" onclick="toggleSection('nacionales')">
+          <h4 class="main-title">Nacionales <i class="bi bi-chevron-down"></i></h4>
+        </div>
+
+        <div id="nacionales" class="section-content d-none">
+
+          {% for nac in nacionales %}
+          <a href="{{ nac.url }}" target="_blank" class="text-decoration-none text-reset">
+            <div class="hud-card search-item" data-name="{{ nac.nombre }}">
+              <div class="hud-rank small-rank">{{ forloop.counter }}</div>
+              <span class="hud-title small-title">{{ nac.nombre }}</span>
+            </div>
+          </a>
+          {% empty %}
+            <p class="text-muted text-center">No hay sistemas nacionales registrados.</p>
+          {% endfor %}
+
+        </div>
+      </div>
+
+      <!-- COL 3: PANELES -->
+      <div class="col-lg-3 col-md-6">
+        <div class="main-card" onclick="toggleSection('paneles')">
+          <h4 class="main-title">Paneles    <i class="bi bi-chevron-down"></i></h4>
+        </div>
+
+        <div id="paneles" class="section-content d-none">
+
+          {% for pan in paneles %}
+          <a href="{{ pan.url }}" target="_blank" class="text-decoration-none text-reset">
+            <div class="hud-card search-item" data-name="{{ pan.nombre }}">
+              <div class="hud-rank small-rank">{{ forloop.counter }}</div>
+              <span class="hud-title small-title">{{ pan.nombre }}</span>
+            </div>
+          </a>
+          {% empty %}
+            <p class="text-muted text-center">No hay paneles registrados.</p>
+          {% endfor %}
+
+        </div>
+      </div>
+
+      <!-- COL 4: MUNICIPALIDADES -->
+      <div class="col-lg-3 col-md-6">
+        <div class="main-card" onclick="toggleSection('municipalidades')">
+          <h4 class="main-title">Municipalidades   <i class="bi bi-chevron-down"></i></h4>
+        </div>
+
+        <div id="municipalidades" class="section-content d-none">
+
+          {% for mun in municipalidades %}
+          <a href="{{ mun.url }}" target="_blank" class="text-decoration-none text-reset">
+            <div class="hud-card search-item" data-name="{{ mun.nombre }}">
+              <div class="hud-rank small-rank">{{ forloop.counter }}</div>
+              <span class="hud-title small-title">{{ mun.nombre }}</span>
+            </div>
+          </a>
+          {% empty %}
+            <p class="text-muted text-center">No hay municipalidades registradas.</p>
+          {% endfor %}
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- ESTILOS -->
+<style>
+.main-card {
+  background: #0a3f78;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: .2s ease;
+  border: 1px solid rgba(255,255,255,0.1);
+  text-align: center;
+}
+
+.main-card:hover {
+  background: #0e519c;
+  transform: translateY(-2px);
+}
+
+.main-title {
+  color: #fff;
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+/* Contenido desplegable */
+.section-content {
+  margin-top: 10px;
+  border-left: 3px solid #0d6efd;
+  padding-left: 10px;
+}
+
+/* HUD CARDS */
+.hud-card {
+  background: linear-gradient(to right, #0d417b, #0f5aa8);
+  border-radius: 6px;
+  padding: 6px 10px;
+  margin-bottom: 5px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  transition: .2s ease;
+}
+
+.hud-card:hover {
+  transform: translateX(4px);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+}
+
+.small-rank {
+  background: #9ce8ff;
+  color: #003a55;
+  padding: 3px 8px;
+  font-weight: 900;
+  font-size: 10px;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+.small-title {
+  font-size: 13px;
+  font-weight: 600;
+}
+</style>
+
+<!-- JS -->
+<script>
+function toggleSection(id) {
+  const section = document.getElementById(id);
+  if (section) section.classList.toggle("d-none");
+}
+
+function normalizarTexto(texto) {
+  return texto
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
+function filtrarItems() {
+  const inputRaw = document.getElementById("buscador").value;
+  const input = normalizarTexto(inputRaw);
+
+  const items = document.querySelectorAll(".search-item");
+  const sections = document.querySelectorAll(".section-content");
+
+  if (input.trim() !== "") {
+    sections.forEach(sec => sec.classList.remove("d-none"));
+  } else {
+    sections.forEach(sec => sec.classList.add("d-none"));
+  }
+
+  items.forEach(item => {
+    const nameRaw = item.getAttribute("data-name") || "";
+    const name = normalizarTexto(nameRaw);
+
+    item.style.display = name.includes(input) ? "flex" : "none";
+  });
+}
+</script>
+
+
+{% endblock %}

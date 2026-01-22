@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    :root { --blue-mp: #0a3de4; }
+    body { background: #f4f6f9; font-family: 'Arial', sans-serif; }
+    .org-container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
+
+    /* --- TARJETA RECTANGULAR CEO --- */
+    .ceo-card {
+        background: #fff;
+        border-radius: 8px;
+        padding: 25px;
+        display: flex;
+        gap: 30px;
+        align-items: center;
+        border-left: 8px solid var(--blue-mp);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        margin-bottom: 50px;
+    }
+    .ceo-img-box {
+        width: 130px;
+        height: 140px;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+        display: flex; align-items: center; justify-content: center;
+        background: #fff;
+    }
+    .ceo-img-box img { width: 100%; height: 100%; object-fit: cover; border-radius: 4px; }
+    
+    .ceo-info .label { color: var(--blue-mp); font-weight: 800; font-size: 0.75rem; text-transform: uppercase; }
+    .ceo-info h2 { margin: 5px 0; font-size: 1.8rem; font-weight: 700; color: #1a1a1a; }
+    .ceo-info .email { color: var(--blue-mp); text-decoration: none; font-size: 0.9rem; }
+
+    /* --- LÍNEA EQUIPO --- */
+    .linea-separadora { border-top: 2px solid #dce1e9; margin: 40px 0; position: relative; }
+    .linea-separadora::before {
+        content: "EQUIPO DE TRABAJO";
+        position: absolute; top: -11px; left: 0;
+        background: #f4f6f9; padding-right: 15px;
+        font-size: 0.75rem; font-weight: 700; color: #8492a6;
+    }
+
+    /* --- GRID EQUIPO CIRCULAR --- */
+    .equipo-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+        gap: 40px 20px;
+    }
+    .staff-card { text-align: center; }
+    .staff-card img, .staff-card .no-foto {
+        width: 110px; height: 110px; border-radius: 50%;
+        border: 3px solid var(--blue-mp); padding: 3px;
+        background: #fff; margin: 0 auto 12px; object-fit: cover;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .staff-card .nombre { font-size: 0.85rem; font-weight: 700; color: #1a1a1a; text-transform: uppercase; display: block; }
+    .staff-card .cargo { font-size: 0.65rem; color: #8492a6; font-weight: 600; text-transform: uppercase; margin: 4px 0; }
+    .staff-card .mail { font-size: 0.7rem; color: var(--blue-mp); text-decoration: none; word-break: break-all; }
+</style>
+
+<div class="org-container">
+    
+    {# BLOQUE DEL CEO #}
+    {% if ceo %}
+    <div class="ceo-card">
+        <div class="ceo-img-box">
+            {% if ceo.imagen %}
+                <img src="{{ ceo.imagen.url }}" alt="{{ ceo.user.get_full_name }}">
+            {% else %}
+                <span style="font-size: 60px; color: var(--blue-mp);">👤</span>
+            {% endif %}
+        </div>
+        <div class="ceo-info">
+            <div class="label">{{ ceo.cargo.nombre }}</div>
+            <h2>{{ ceo.user.first_name }} {{ ceo.user.last_name }}</h2>
+            <a href="mailto:{{ ceo.user.email }}" class="email">✉ {{ ceo.user.email }}</a>
+            <div style="font-size: 0.8rem; color: #6c757d; margin-top: 5px;">Anexo: {{ ceo.telefono|default:"----" }}</div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="linea-separadora"></div>
+
+    {# BLOQUE DEL EQUIPO #}
+    <div class="equipo-grid">
+        {% for p in equipo %}
+        <div class="staff-card">
+            {% if p.imagen %}
+                <img src="{{ p.imagen.url }}">
+            {% else %}
+                <div class="no-foto"><span style="font-size: 40px; color: var(--blue-mp);">👤</span></div>
+            {% endif %}
+            <span class="nombre">{{ p.user.first_name }} {{ p.user.last_name }}</span>
+            <div class="cargo">{{ p.cargo.nombre }}</div>
+            <a href="mailto:{{ p.user.email }}" class="mail">{{ p.user.email }}</a>
+            <div style="font-size: 0.65rem; color: #adb5bd; margin-top: 4px;">Anexo: {{ p.telefono|default:"----" }}</div>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

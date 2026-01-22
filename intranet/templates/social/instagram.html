@@ -1,0 +1,327 @@
+{% extends 'social/base_social.html' %}
+{% load static %}
+
+{% block title %}Red Social Institucional{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+
+    <!-- BOTÓN SUBIR -->
+    <div class="text-end mb-4">
+        <h1 class="text-center mb-3 fw-bold text-primary">
+            COMUNIDAD
+            <a href="{% url 'social_subir' %}" class="btn btn-primary fw-bold px-4 py-2 ms-2">
+                <i class="bi bi-cloud-arrow-up"></i> Subir publicación
+            </a>
+        </h1>
+    </div>
+
+    <!-- GRID -->
+    <div class="posts-grid">
+
+        {% for p in posts %}
+        <div class="post-card">
+
+            <!-- HEADER -->
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex align-items-center">
+                    {% if p.autor.perfil.imagen %}
+                        <img src="{{ p.autor.perfil.imagen.url }}" class="avatar">
+                    {% else %}
+                        <img src="{% static 'img/user_default.png' %}" class="avatar">
+                    {% endif %}
+                    <strong class="ms-2">@{{ p.autor.username }}</strong>
+                </div>
+                <span class="text-muted small">{{ p.fecha|date:"d/m/Y H:i" }}</span>
+          
+                {% if user.is_staff or user == p.autor %}
+                <form method="POST"
+                    action="{% url 'social_eliminar' p.id %}"
+                    onsubmit="return confirm('¿Desea eliminar esta publicación?');"
+                    class="ms-2">
+                    {% csrf_token %}
+                    <button class="btn btn-sm btn-outline-danger">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </form>
+                {% endif %}
+              </div>
+            <!-- MEDIA -->
+            <div class="media-area">
+
+                {% if p.imagen %}
+                    <img src="{{ p.imagen.url }}"
+                         class="media-file clickable"
+                         onclick="openStory('{{ p.imagen.url }}', null)">
+
+                {% elif p.video %}
+                    {% if p.video.url %}
+                    <div class="video-thumb clickable"
+                         onclick="openStory(null, '{{ p.video.url }}')">
+
+                        <video muted>
+                            <source src="{{ p.video.url }}">
+                        </video>
+
+                        <div class="play-overlay">
+                            <i class="bi bi-play-fill"></i>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                {% else %}
+                    <div class="text-muted small">(Sin archivo multimedia)</div>
+                {% endif %}
+
+            </div>
+
+            <!-- LIKE -->
+            <div class="mt-2">
+                <button class="btn-like"
+                        onclick="toggleLike({{ p.id }})"
+                        id="like-btn-{{ p.id }}">
+                    {% if p.id in liked_ids %}
+                        <i class="bi bi-heart-fill text-danger fs-4"></i>
+                    {% else %}
+                        <i class="bi bi-heart fs-4"></i>
+                    {% endif %}
+                </button>
+
+                <span class="fw-bold ms-1" id="likes-count-{{ p.id }}">
+                    {{ p.total_likes }}
+                </span> me gusta
+            </div>
+
+            {% if p.titulo %}
+            <p class="mt-1">{{ p.titulo }}</p>
+            {% endif %}
+
+            {% if p.comentarios.count > 0 %}
+            <p class="view-comments" onclick="toggleComments({{ p.id }})">
+                Ver los {{ p.comentarios.count }} comentarios
+            </p>
+            {% endif %}
+
+            <div id="comments-{{ p.id }}" class="d-none">
+                {% for c in p.comentarios.all %}
+                <p class="mb-1">
+                    <strong>@{{ c.usuario.username }}</strong> {{ c.texto }}
+                </p>
+                {% endfor %}
+            </div>
+
+            <form method="POST" action="{% url 'social_comentar' p.id %}">
+                {% csrf_token %}
+                <input class="form-control mt-2"
+                       name="texto"
+                       placeholder="Añadir un comentario…">
+            </form>
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+<!-- MODAL -->
+<div id="storyModal" class="story-modal d-none">
+    <div class="story-content-wrapper">
+        <img id="storyImage" class="story-content d-none">
+        <video id="storyVideo" class="story-content d-none" controls></video>
+    </div>
+</div>
+
+<!-- ESTILOS -->
+<style>
+
+.posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px,1fr));
+    gap: 28px;
+}
+
+.post-card {
+    border: 1px solid #0d6efd;
+    border-radius: 12px;
+    padding: 12px;
+    background: white;
+}
+
+.avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+}
+
+.media-area {
+    width: 100%;
+    height: 260px;
+    background: #f8f8f8;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.media-file {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.video-thumb {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.video-thumb video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.play-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 60px;
+    color: white;
+    background: rgba(0,0,0,0.25);
+}
+
+.clickable {
+    cursor: zoom-in;
+}
+
+.view-comments {
+    cursor: pointer;
+    color: #0066cc;
+    font-size: 0.85rem;
+}
+
+.story-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5000;
+}
+
+.story-content-wrapper {
+    width: 100vw;
+    height: 100vh;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.story-content {
+    max-width: 70%;
+    max-height: 70%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 16px;
+    background: black;
+}
+#storyVideo {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+/* ===== BOTÓN LIKE ===== */
+
+.btn-like {
+    all: unset;             
+    cursor: pointer;
+    display: inline-flex;   
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+}
+
+.btn-like i {
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+}
+
+.btn-like:hover i {
+    transform: scale(1.15);
+    transition: transform 0.15s ease;
+}
+
+.btn-like:active i {
+    transform: scale(0.95);
+}
+
+
+</style>
+
+<!-- SCRIPTS -->
+<script>
+
+function openStory(img, video){
+    const modal = document.getElementById("storyModal");
+    const imgEl = document.getElementById("storyImage");
+    const vidEl = document.getElementById("storyVideo");
+
+    imgEl.classList.add("d-none");
+    vidEl.classList.add("d-none");
+
+    if (img){
+        imgEl.src = img;
+        imgEl.classList.remove("d-none");
+    }
+
+    if (video){
+        vidEl.src = video;
+        vidEl.classList.remove("d-none");
+        vidEl.play();
+    }
+
+    modal.classList.remove("d-none");
+}
+
+document.getElementById("storyModal").onclick = function(){
+    this.classList.add("d-none");
+    const v = document.getElementById("storyVideo");
+    v.pause();
+    v.currentTime = 0;
+};
+
+function toggleComments(id){
+    document.getElementById(`comments-${id}`).classList.toggle("d-none");
+}
+
+function toggleLike(id){
+    fetch(`/social/like/${id}/`, {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}"
+        }
+    })
+    .then(r => r.json())
+    .then(d => {
+        document.getElementById(`likes-count-${id}`).innerText = d.total_likes;
+        document.getElementById(`like-btn-${id}`).innerHTML =
+            d.liked
+            ? '<i class="bi bi-heart-fill text-danger fs-4"></i>'
+            : '<i class="bi bi-heart fs-4"></i>';
+    });
+}
+
+</script>
+
+{% endblock %}

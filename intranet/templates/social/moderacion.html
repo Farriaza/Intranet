@@ -1,0 +1,130 @@
+{% extends 'social/base_social.html' %}
+{% load static %}
+
+{% block title %}Moderación de Contenido{% endblock %}
+
+{% block content %}
+<style>
+/* ===========================
+   MODERACIÓN – ESTILO SOCIAL
+=========================== */
+
+.post-card {
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fff;
+}
+
+/* Multimedia */
+.post-media img,
+.post-media video {
+  width: 100%;
+  max-height: 420px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Video */
+.post-media video {
+  background: black;
+}
+
+/* Header */
+.card-header {
+  border-bottom: 1px solid #e6e6e6;
+}
+
+/* Footer */
+.card-footer {
+  border-top: 1px solid #e6e6e6;
+}
+
+</style>
+<div class="container py-4" style="max-width:1100px;">
+
+  <h2 class="fw-bold mb-4">🛡️ Moderación de publicaciones</h2>
+
+  {% if pendientes %}
+  <div class="row g-4">
+
+    {% for p in pendientes %}
+    <div class="col-md-6 col-lg-4">
+
+      <div class="card shadow-sm h-100 post-card">
+
+        <!-- ================= HEADER ================= -->
+        <div class="card-header bg-white d-flex align-items-center gap-2">
+          <img src="{{ p.autor.perfil.imagen.url }}"
+               class="rounded-circle"
+               style="width:36px;height:36px;object-fit:cover;">
+          <div>
+            <strong>@{{ p.autor.username }}</strong><br>
+            <small class="text-muted">{{ p.fecha|date:"d/m/Y H:i" }}</small>
+          </div>
+        </div>
+
+        <!-- ================= MULTIMEDIA ================= -->
+        <div class="post-media">
+
+          {% if p.imagen %}
+            <img src="{{ p.imagen.url }}" alt="imagen publicación">
+
+          {% elif p.video %}
+            <video controls>
+              <source src="{{ p.video.url }}" type="video/mp4">
+              Tu navegador no soporta video.
+            </video>
+
+          {% else %}
+            <div class="p-5 text-center text-muted">
+              <i class="bi bi-file-earmark-exclamation fs-1"></i><br>
+              Sin archivo multimedia
+            </div>
+          {% endif %}
+
+        </div>
+
+        <!-- ================= BODY ================= -->
+{% if p.titulo %}
+  <p>{{ p.titulo }}</p>
+{% elif p.descripcion %}
+  <p>{{ p.descripcion }}</p>
+{% else %}
+  <p class="text-muted fst-italic">
+    Publicación sin texto
+  </p>
+{% endif %}
+
+
+
+
+
+        <!-- ================= MODERACIÓN ================= -->
+        <div class="card-footer bg-white d-flex gap-2">
+
+          <a href="{% url 'social_aprobar' p.id %}"
+             class="btn btn-success w-50 fw-semibold">
+            ✔ Aprobar
+          </a>
+
+          <a href="{% url 'social_rechazar' p.id %}"
+             class="btn btn-outline-danger w-50 fw-semibold">
+            ✖ Rechazar
+          </a>
+
+        </div>
+
+      </div>
+    </div>
+    {% endfor %}
+
+  </div>
+
+  {% else %}
+    <p class="text-muted text-center mt-5">
+      No hay publicaciones pendientes 🎉
+    </p>
+  {% endif %}
+
+</div>
+{% endblock %}

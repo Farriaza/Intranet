@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Agregar Noticia{% endblock %}
+
+{% block content %}
+<div class="container py-1">
+
+  <h2 class="fw-bold mb-1 text-center text-primary">Agregar Noticia</h2>
+
+  <div class="card shadow-lg p-2" style="border-radius: 12px; background:#1f3b83;">
+
+    <!-- Autor de la noticia -->
+    <div class="d-flex align-items-center mb-3 text-white">
+      {% if request.user.perfil.foto %}
+        <img src="{{ request.user.perfil.foto.url }}"
+             class="rounded-circle me-2"
+             width="45"
+             height="45"
+             alt="Autor">
+      {% else %}
+        <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-2"
+             style="width:45px;height:45px;">
+          <span class="fw-bold text-white">
+            {{ request.user.first_name|slice:":1"|default:request.user.username|slice:":1" }}
+          </span>
+        </div>
+      {% endif %}
+
+      <span class="fw-semibold">
+        por {{ request.user.get_full_name|default:request.user.username }}
+      </span>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      {% for field in form %}
+        <div class="mb-1">
+          <label class="form-label text-white fw-bold">{{ field.label }}:</label>
+          {{ field }}
+          {% if field.errors %}
+            <div class="text-danger small">{{ field.errors }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+
+      <div class="text-end mt-4">
+        <a href="{% url 'prensa_panel' %}" class="btn btn-secondary me-2">Cancelar</a>
+        <button class="btn btn-success px-4">Guardar</button>
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+{% endblock %}

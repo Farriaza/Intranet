@@ -1,0 +1,187 @@
+{% extends "social/base_social.html" %}
+{% load static %}
+
+{% block title %}Subir publicación{% endblock %}
+
+{% block content %}
+
+<div class="container py-5" style="max-width:650px;">
+
+    <h2 class="fw-bold text-center mb-4" style="color:#1f2d3d;">
+        <i class="bi bi-upload me-2"></i> Subir nueva publicación
+    </h2>
+
+    <form id="uploadForm" method="POST" enctype="multipart/form-data" class="upload-card">
+        {% csrf_token %}
+
+        <!-- TÍTULO -->
+        <div class="mb-3">
+            <label class="form-label fw-semibold">Título (opcional)</label>
+            <input type="text" name="titulo" class="form-control"
+                   placeholder="Escribe un título...">
+        </div>
+
+        <!-- INPUT ARCHIVO -->
+        <label class="form-label fw-semibold">Imagen o Video</label>
+
+        <div id="dropZone" class="dropzone mb-3"
+             onclick="document.getElementById('fileInput').click();">
+
+            <i class="bi bi-file-earmark-arrow-up fs-1 text-primary"></i>
+            <p class="mt-2 mb-0 fw-semibold">Haz clic o arrastra un archivo</p>
+            <small class="text-muted">Formatos permitidos: JPG, PNG, MP4</small>
+        </div>
+
+        <input type="file" id="fileInput" name="archivo"
+               accept="image/*,video/*"
+               class="d-none">
+
+        <!-- ===== BLOQUE DESTACADO LOGROS ===== -->
+        <div class="logros-highlight mt-4 p-3">
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox"
+                       name="en_logros" id="enLogros">
+
+                <label class="form-check-label fw-semibold" for="enLogros">
+                    <i class="bi bi-award-fill me-1 text-warning"></i>
+                    Compartir también en <b>Logros Institucionales</b>
+                </label>
+            </div>
+
+            <!-- TEXTO LOGRO -->
+        
+<div class="mb-3">
+  <label class="form-label fw-semibold">
+    Texto del logro <span class="text-muted">(solo si es logro)</span>
+  </label>
+  <textarea
+    name="texto_logro"
+    class="form-control"
+    rows="3"
+    placeholder="Ej: Reconocimiento por destacada labor institucional..."
+  ></textarea>
+</div>
+
+
+        </div>
+
+        <!-- PREVISUALIZACIÓN -->
+        <div id="previewContainer" class="preview-container d-none mt-3">
+            <img id="previewImage" class="preview-media d-none">
+            <video id="previewVideo" class="preview-media d-none" controls></video>
+        </div>
+
+        <!-- BOTÓN -->
+        <button type="submit" class="btn btn-primary w-100 py-2 fw-bold rounded-2 mt-4">
+            Publicar
+        </button>
+
+    </form>
+</div>
+
+<!-- MODAL -->
+<div class="modal fade" id="publicacionModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-4 text-center">
+            <i class="bi bi-hourglass-split text-primary fs-1 mb-3"></i>
+            <h4 class="fw-bold">Publicación enviada</h4>
+            <p class="mt-2 mb-0">
+                Su publicación está en proceso de revisión.<br>
+                Apenas sea autorizada aparecerá en el módulo de <b>Multimedia</b>.
+            </p>
+            <button class="btn btn-primary mt-3" data-bs-dismiss="modal">
+                Entendido
+            </button>
+        </div>
+    </div>
+</div>
+
+<style>
+.upload-card {
+    border: 2px solid #0d6efd;
+    border-radius: 12px;
+    padding: 28px;
+    background: white !important;
+}
+
+.dropzone {
+    border: 2px dashed #0d6efd;
+    border-radius: 10px;
+    padding: 35px;
+    text-align: center;
+    cursor: pointer;
+}
+.dropzone:hover { background: #f3f6ff; }
+
+.preview-media {
+    max-width: 100%;
+    max-height: 350px;
+    border-radius: 12px;
+    border: 1px solid #d0d0d0;
+}
+
+/* 🔥 BLOQUE LOGROS DESTACADO */
+.logros-highlight {
+    border: 2px solid rgba(31,59,131,0.35);
+    border-radius: 12px;
+    background: linear-gradient(135deg, #f4f7ff, #ffffff);
+    box-shadow: 0 4px 12px rgba(31,59,131,0.15);
+}
+
+.logros-highlight .form-check-input:checked {
+    background-color: #1f3b83;
+    border-color: #1f3b83;
+}
+</style>
+
+<script>
+const fileInput = document.getElementById("fileInput");
+const previewContainer = document.getElementById("previewContainer");
+const previewImage = document.getElementById("previewImage");
+const previewVideo = document.getElementById("previewVideo");
+
+fileInput.addEventListener("change", function () {
+    const file = this.files[0];
+    if (!file) return;
+
+    previewContainer.classList.remove("d-none");
+    previewImage.classList.add("d-none");
+    previewVideo.classList.add("d-none");
+
+    const url = URL.createObjectURL(file);
+
+    if (file.type.startsWith("image")) {
+        previewImage.src = url;
+        previewImage.classList.remove("d-none");
+    } else {
+        previewVideo.src = url;
+        previewVideo.classList.remove("d-none");
+    }
+});
+
+/* MOSTRAR / OCULTAR TEXTO LOGRO */
+const checkLogros = document.getElementById("enLogros");
+const logroWrapper = document.getElementById("logroInputWrapper");
+
+checkLogros.addEventListener("change", function () {
+    if (this.checked) {
+        logroWrapper.classList.remove("d-none");
+    } else {
+        logroWrapper.classList.add("d-none");
+    }
+});
+
+document.getElementById("uploadForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const modal = new bootstrap.Modal(document.getElementById("publicacionModal"));
+    modal.show();
+
+    setTimeout(() => {
+        e.target.submit();
+    }, 600);
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Noticias{% endblock %}
+
+{% block content %}
+<style>
+
+.noticia-card {
+  border-radius: 16px;
+  border: none;
+  background: #ffffff;
+  box-shadow: 0 8px 22px rgba(0,0,0,.06);
+  transition: transform .25s ease, box-shadow .25s ease;
+  
+}
+
+.noticia-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 34px rgba(0,0,0,.12);
+}
+
+
+.noticia-img-wrapper {
+  height: 180px;
+  overflow: hidden;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+
+.noticia-img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .4s ease;
+}
+
+.noticia-card:hover img {
+  transform: scale(1.06);
+}
+
+
+.noticia-titulo {
+  font-weight: 600;
+  font-size: 1.05rem;
+  line-height: 1.3;
+  margin-bottom: .4rem;
+}
+
+.noticia-desc {
+  font-size: .9rem;
+  color: #555;
+}
+
+/* ================================
+   CATEGORÍA
+================================ */
+.categoria-badge {
+  background: #e8f0ff;
+  color: #1f3b83;
+  font-size: .75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  width: fit-content;
+}
+
+/* ================================
+   FILTRO
+================================ */
+form select {
+  min-width: 160px;
+}
+.noticia-card *::selection {
+  background: #e8f0ff;
+  color: #1f3b83;
+}
+
+.noticia-card {
+  user-select: none;
+}
+
+.noticia-card,
+.noticia-card p,
+.noticia-card h5,
+.noticia-card small {
+  color: #2b2b2b !important;
+}
+.noticia-fecha {
+  color: #6c757d !important;
+}
+.noticia-desc {
+  color: #4a4a4a !important;
+}
+
+</style>
+<div class="container my-4">
+
+  <!-- HEADER -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold text-primary mb-0">
+      📰 Noticias
+    </h2>
+
+    <!-- FILTRO -->
+  <!-- FILTRO + BUSCADOR -->
+<form method="get" class="d-flex gap-2 align-items-center">
+
+  <!-- BUSCADOR -->
+  <input type="text"
+         name="q"
+         value="{{ query|default:'' }}"
+         class="form-control form-control-sm"
+         placeholder="Buscar noticia...">
+  <!-- MOSTRAR TODO -->
+  {% if categoria_activa or query %}
+    <a href="{% url 'noticias_listado' %}"
+       class="btn btn-sm btn-primary">
+      Mostrar todo
+    </a>
+  {% endif %}
+  <!-- CATEGORÍA -->
+  <select name="categoria"
+          class="form-select form-select-sm"
+          onchange="this.form.submit()">
+    <option value="">Todas</option>
+    {% for key, label in categorias %}
+      <option value="{{ key }}"
+        {% if categoria_activa == key %}selected{% endif %}>
+        {{ label }}
+      </option>
+    {% endfor %}
+  </select>
+
+  <!-- BUSCAR -->
+  <button class="btn btn-sm btn-primary">
+    Buscar
+  </button>
+
+
+
+</form>
+
+  </div>
+
+  {% if noticias %}
+    <div class="row g-4">
+
+      {% for noticia in noticias %}
+        <div class="col-md-6 col-lg-4">
+
+          <article class="card noticia-card h-100">
+
+            {% if noticia.imagen %}
+              <div class="noticia-img-wrapper">
+                <img src="{{ noticia.imagen.url }}" alt="{{ noticia.titulo }}">
+              </div>
+            {% endif %}
+
+            <div class="card-body d-flex flex-column">
+
+              <span class="badge categoria-badge mb-2">
+                {{ noticia.categoria }}
+              </span>
+
+              <h5 class="noticia-titulo">
+                {{ noticia.titulo }}
+              </h5>
+
+              <small class="text-muted mb-2">
+                {{ noticia.fecha|date:"d M Y" }}
+              </small>
+
+              <p class="noticia-desc flex-grow-1">
+                {{ noticia.descripcion|truncatechars:110 }}
+              </p>
+
+              <a href="{% url 'noticia_detalle' noticia.slug %}"
+                 class="btn btn-sm btn-outline-primary mt-auto">
+                Leer más
+              </a>
+
+            </div>
+          </article>
+
+        </div>
+      {% endfor %}
+
+    </div>
+  {% else %}
+    <div class="alert alert-secondary">
+      No hay noticias disponibles.
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}

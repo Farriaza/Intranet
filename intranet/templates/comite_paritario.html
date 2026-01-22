@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Comité Paritario{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+
+    <!-- ================= TÍTULO ================= -->
+    <div class="text-center mb-4">
+        <h1 class="fw-bold">COMITÉ PARITARIO DE HIGIENE Y SEGURIDAD</h1>
+
+        <button class="btn btn-outline-primary mb-3"
+                data-bs-toggle="collapse"
+                data-bs-target="#organigrama">
+            Ver organigrama
+        </button>
+
+        <div class="collapse" id="organigrama">
+            <img src="{% static 'comite_paritario.PNG' %}"
+                 alt="Organigrama Comité Paritario"
+                 class="img-fluid rounded shadow-sm mt-3">
+        </div>
+    </div>
+
+    <div class="row">
+
+        <!-- ================= COLUMNA IZQUIERDA ================= -->
+        <div class="col-md-7">
+
+            <h3>¿QUÉ ES UN COMITÉ PARITARIO DE HIGIENE Y SEGURIDAD?</h3>
+            <p class="text-justify">
+                EL COMITÉ PARITARIO DE HIGIENE Y SEGURIDAD (CPHS) ES EL ORGANISMO
+                TÉCNICO DE PARTICIPACIÓN ENTRE EMPRESAS Y TRABAJADORES.
+            </p>
+
+            <p class="text-justify">
+                LOS COMITÉS PARITARIOS SON OBLIGATORIOS EN EMPRESAS CON MÁS DE 25
+                TRABAJADORES.
+            </p>
+
+          <h3>FUNCIONES PRINCIPALES</h3>
+
+<p>1. Instruir sobre la correcta utilización de los equipos de protección personal (EPP).</p>
+<p>2. Vigilar el cumplimiento de las medidas de prevención, higiene y seguridad.</p>
+<p>3. Investigar las causas de accidentes del trabajo y enfermedades profesionales.</p>
+<p>4. Determinar la existencia de negligencia inexcusable, cuando corresponda.</p>
+<p>5. Adoptar medidas de higiene y seguridad para la prevención de riesgos profesionales.</p>
+<p>6. Cumplir las funciones encomendadas por el organismo administrador.</p>
+<p>7. Promover la capacitación en materias de prevención de riesgos.</p>
+
+
+        </div>
+
+        <!-- ================= COLUMNA DERECHA ================= -->
+        <div class="col-md-5">
+
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="mb-0">Descargas de documentos</h4>
+
+                        {% if user.is_staff %}
+
+                        <button class="btn btn-sm btn-success"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalSubirDocumento">
+                            ➕ Subir
+                        </button>
+                        {% endif %}
+                    </div>
+
+                    <div class="accordion" id="accordionComite">
+
+                        {% for categoria in categorias %}
+                        <div class="accordion-item">
+
+                            <h2 class="accordion-header">
+                                <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#cat{{ categoria.id }}">
+                                    {{ categoria.nombre|upper }}
+                                </button>
+                            </h2>
+
+                            <div id="cat{{ categoria.id }}"
+                                 class="accordion-collapse collapse {% if forloop.first %}show{% endif %}">
+                                <div class="accordion-body">
+                                    <ul class="list-group">
+
+                                        {% for doc in categoria.documentos.all %}
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <a href="{{ doc.archivo.url }}" download>
+                                                {{ doc.titulo }}
+                                            </a>
+                                            <small class="text-muted">
+                                                {{ doc.fecha_subida|date:"d/m/Y" }}
+                                            </small>
+                                        </li>
+                                        {% empty %}
+                                        <li class="list-group-item text-muted">
+                                            No hay documentos disponibles
+                                        </li>
+                                        {% endfor %}
+
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<!-- ================= MODAL SUBIR DOCUMENTO ================= -->
+<div class="modal fade" id="modalSubirDocumento" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Subir documento</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Categoría</label>
+                        {{ form.categoria }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Título</label>
+                        {{ form.titulo }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Archivo</label>
+                        {{ form.archivo }}
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        Guardar
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

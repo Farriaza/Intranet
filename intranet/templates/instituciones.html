@@ -1,0 +1,305 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Directorio Institucional{% endblock %}
+{% block page_title %}Directorio Institucional{% endblock %}
+
+{% block content %}
+<style>
+  .link-institucional {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #1f3b83;
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .link-institucional i {
+    font-size: 0.85rem;
+    opacity: 0.6;
+    margin-left: 0.5rem;
+  }
+
+  .link-institucional:hover {
+    color: #0d6efd;
+    text-decoration: underline;
+  }
+
+  .link-institucional:hover i {
+    opacity: 1;
+  }
+</style>
+
+<div class="container py-5">
+
+  <!-- TÍTULO -->
+  <div class="text-center mb-5">
+    <i class="bi bi-building text-primary fs-2"></i>
+    <h2 class="fw-bold text-primary mt-2">Directorio Institucional</h2>
+    <p class="text-muted small">
+      Accesos a organismos del sistema de justicia e intranets institucionales
+    </p>
+  </div>
+
+  <div class="row g-4">
+
+    <!-- COLUMNA IZQUIERDA -->
+    <div class="col-md-6">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-header bg-white fw-semibold text-primary">
+          Organismos del Sistema de Justicia
+        </div>
+
+        <ul class="list-group list-group-flush">
+
+          <li class="list-group-item">
+            <a href="https://www.carabineros.cl"
+               class="link-institucional"
+               target="_blank"
+               rel="noopener noreferrer">
+              Carabineros de Chile
+              <i class="bi bi-box-arrow-up-right"></i>
+            </a>
+          </li>
+
+          <li class="list-group-item">
+            <a href="https://www.conace.cl"
+               class="link-institucional"
+               target="_blank"
+               rel="noopener noreferrer">
+              CONACE
+              <i class="bi bi-box-arrow-up-right"></i>
+            </a>
+          </li>
+
+          <li class="list-group-item">
+            <a href="https://www.defensoriapenal.cl"
+               class="link-institucional"
+               target="_blank"
+               rel="noopener noreferrer">
+              Defensoría Penal Pública
+              <i class="bi bi-box-arrow-up-right"></i>
+            </a>
+          </li>
+
+          <li class="list-group-item">
+            <a href="https://www.gendarmeria.gob.cl"
+               class="link-institucional"
+               target="_blank"
+               rel="noopener noreferrer">
+              Gendarmería de Chile
+              <i class="bi bi-box-arrow-up-right"></i>
+            </a>
+          </li>
+
+          <li class="list-group-item">
+            <a href="https://www.minjusticia.gob.cl"
+               class="link-institucional"
+               target="_blank"
+               rel="noopener noreferrer">
+              Ministerio de Justicia
+              <i class="bi bi-box-arrow-up-right"></i>
+            </a>
+          </li>
+
+          <li class="list-group-item">
+            <a href="https://www.pdichile.cl/"
+               class="link-institucional"
+               target="_blank"
+               rel="noopener noreferrer">
+              Policía de Investigaciones de Chile
+              <i class="bi bi-box-arrow-up-right"></i>
+            </a>
+          </li>
+
+          <li class="list-group-item">
+            <a href="https://www.pjud.cl"
+               class="link-institucional"
+               target="_blank"
+               rel="noopener noreferrer">
+              Poder Judicial
+              <i class="bi bi-box-arrow-up-right"></i>
+            </a>
+          </li>
+
+          <li class="list-group-item">
+            <a href="https://www.registrocivil.cl"
+               class="link-institucional"
+               target="_blank"
+               rel="noopener noreferrer">
+              Registro Civil e Identificación
+              <i class="bi bi-box-arrow-up-right"></i>
+            </a>
+          </li>
+
+          <li class="list-group-item">
+            <a href="https://www.sernameg.gob.cl/"
+               class="link-institucional"
+               target="_blank"
+               rel="noopener noreferrer">
+              Servicio Nacional de la Mujer
+              <i class="bi bi-box-arrow-up-right"></i>
+            </a>
+          </li>
+
+          <li class="list-group-item">
+            <a href="https://www.sename.cl/web"
+               class="link-institucional"
+               target="_blank"
+               rel="noopener noreferrer">
+              Servicio Nacional de Menores
+              <i class="bi bi-box-arrow-up-right"></i>
+            </a>
+          </li>
+
+          <li class="list-group-item">
+            <a href="https://www.sml.gob.cl/"
+               class="link-institucional"
+               target="_blank"
+               rel="noopener noreferrer">
+              Servicio Médico Legal
+              <i class="bi bi-box-arrow-up-right"></i>
+            </a>
+          </li>
+
+        </ul>
+      </div>
+    </div>
+
+    <!-- COLUMNA DERECHA -->
+    <div class="col-md-6">
+      <div class="card border-0 shadow-sm h-100">
+        <div class="card-header bg-white fw-semibold text-primary">
+          Intranets y Unidades Fiscalía Nacional
+        </div>
+
+        <ul class="list-group list-group-flush">
+
+          <li class="list-group-item">
+            <a href="http://172.17.215.13/intranet/web/docs/Atencion_usuarios_complejos_violentos.pdf"
+               class="link-institucional"
+               target="_blank"
+               rel="noopener noreferrer">
+              Atención a Usuarios Complejos y Violentos
+              <i class="bi bi-box-arrow-up-right"></i>
+            </a>
+          </li>
+         <li class="list-group-item">
+            <a href="http://mpintra/usexvi/"
+               class="link-institucional"
+               target="_blank"
+               rel="noopener noreferrer">
+              Delitos Sexuales y Violentos
+              <i class="bi bi-box-arrow-up-right"></i>
+            </a>
+          </li>
+          <li class="list-group-item">
+            <a href="http://mpintra/anticorrupcion/"
+               class="link-institucional"
+               target="_blank"
+               rel="noopener noreferrer">
+              Intranet Anticorrupción
+              <i class="bi bi-box-arrow-up-right"></i>
+            </a>
+          </li>
+
+          <li class="list-group-item">
+            <a href="http://172.18.1.193/rrhh/index.php?option=com_wrapper&view=wrapper&Itemid=520"
+               class="link-institucional"
+               target="_blank"
+               rel="noopener noreferrer">
+              Intranet Bienestar
+              <i class="bi bi-box-arrow-up-right"></i>
+            </a>
+          </li>
+
+          <li class="list-group-item">
+            <a href="http://fnintranet/"
+               class="link-institucional"
+               target="_blank"
+               rel="noopener noreferrer">
+              Intranet Fiscalía Nacional
+              <i class="bi bi-box-arrow-up-right"></i>
+            </a>
+          </li>
+
+          <li class="list-group-item">
+            <a href="http://mpintra/informatica/"
+               class="link-institucional"
+               target="_blank"
+               rel="noopener noreferrer">
+              Intranet Informática Fiscalía Nacional
+              <i class="bi bi-box-arrow-up-right"></i>
+            </a>
+          </li>
+
+          <li class="list-group-item">
+            <a href="http://mpintra/rrhh/"
+               class="link-institucional"
+               target="_blank"
+               rel="noopener noreferrer">
+              Intranet RRHH Fiscalía Nacional
+              <i class="bi bi-box-arrow-up-right"></i>
+            </a>
+          </li>
+
+          <li class="list-group-item">
+            <a href="http://mpintra/vyt/"
+               class="link-institucional"
+               target="_blank"
+               rel="noopener noreferrer">
+              Intranet Víctimas y Testigos
+              <i class="bi bi-box-arrow-up-right"></i>
+            </a>
+          </li>
+
+        
+
+          <li class="list-group-item">
+            <a href="http://mpintra/ulddeco/"
+               class="link-institucional"
+               target="_blank"
+               rel="noopener noreferrer">
+              Lavado de Dinero, Delitos Económicos y Crimen Organizado
+              <i class="bi bi-box-arrow-up-right"></i>
+            </a>
+          </li>
+
+          <li class="list-group-item">
+            <a href="http://mpintra/rrhh/index.php?option=com_content&view=article&id=1342&Itemid=327"
+               class="link-institucional"
+               target="_blank"
+               rel="noopener noreferrer">
+              Perfiles de Cargo
+              <i class="bi bi-box-arrow-up-right"></i>
+            </a>
+          </li>
+
+          <li class="list-group-item">
+            <a href="http://mpintra/rpavif/"
+               class="link-institucional"
+               target="_blank"
+               rel="noopener noreferrer">
+              Responsabilidad Penal Adolescente y Violencia Intrafamiliar
+              <i class="bi bi-box-arrow-up-right"></i>
+            </a>
+          </li>
+         <li class="list-group-item">
+            <a href="http://mpintra/drogas/"
+               class="link-institucional"
+               target="_blank"
+               rel="noopener noreferrer">
+              Unidad de Drogas FN
+              <i class="bi bi-box-arrow-up-right"></i>
+            </a>
+          </li>
+        
+
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

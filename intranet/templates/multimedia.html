@@ -1,0 +1,240 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Sistemas{% endblock %}
+{% block page_title %}Sistemas{% endblock %}
+
+{% block content %}
+<section class="py-5 bg-light">
+  <div class="container">
+
+    <!-- NAV TABS -->
+    <div class="text-center mb-5">
+      <ul class="nav nav-tabs justify-content-center mb-4" id="systemTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="imagenes-tab" data-bs-toggle="tab" data-bs-target="#imagenes" type="button" role="tab">Imágenes</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="videos-tab" data-bs-toggle="tab" data-bs-target="#videos" type="button" role="tab">Videos</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="enlaces-tab" data-bs-toggle="tab" data-bs-target="#enlaces" type="button" role="tab">Enlaces</button>
+        </li>
+      </ul>
+    </div>
+
+    <!-- TAB CONTENT -->
+    <div class="tab-content" id="systemTabsContent">
+      
+      <!-- ===== IMÁGENES ===== -->
+      <div class="tab-pane fade show active" id="imagenes" role="tabpanel">
+        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-3">
+          {% for i in "1,2,3"|cut:"," %}
+          <div class="col">
+            <div class="card border-0 shadow-sm overflow-hidden h-100 hover-scale">
+              <img src="{% static 'img/imagen'|add:i|add:'.jpg' %}"
+                   class="img-fluid rounded-3 thumb-img"
+                   alt="Imagen {{ i }}"
+                   onclick="expandImage(this)">
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Lightbox de imágenes -->
+      <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <img id="expandedImg" class="expanded-img" alt="Vista ampliada">
+      </div>
+
+      <!-- ===== VIDEOS ===== -->
+      <div class="tab-pane fade" id="videos" role="tabpanel">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+
+          {% for i in "1,2,3"|cut:"," %}
+          <div class="col">
+            <div class="video-card position-relative hover-scale">
+              <div class="video-wrapper" >
+                <video class="video-thumb rounded-3 shadow-sm" muted loop>
+                  <source src="{% static 'img/video'|add:i|add:'.mp4' %}" type="video/mp4">
+                </video>
+                <div class="play-overlay d-flex justify-content-center align-items-center">
+                  <i class="bi bi-play-circle-fill fs-1 {% if i == '1' %}text-primary{% else %}text-danger{% endif %}"></i>
+                </div>
+              </div>
+              <h6 class="text-center mt-2 fw-bold">Video {{ i }}</h6>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Lightbox de video -->
+      <div id="videoLightbox" class="lightbox" onclick="closeVideo()">
+        <video id="expandedVideo" class="expanded-video" controls></video>
+      </div>
+
+      <!-- ===== ENLACES ===== -->
+      <div class="tab-pane fade" id="enlaces" role="tabpanel">
+        <div class="mb-4 text-center">
+          <input type="text" id="searchInput" class="form-control w-50 mx-auto" placeholder="Buscar enlace...">
+        </div>
+
+        <div id="linkList" class="row row-cols-1 row-cols-md-3 g-3">
+          <div class="col">
+            <a href="https://www.gob.cl/" target="_blank" class="list-group-item list-group-item-action text-center fw-semibold">Gobierno de Chile</a>
+          </div>
+          <div class="col">
+            <a href="https://www.interior.gob.cl/" target="_blank" class="list-group-item list-group-item-action text-center fw-semibold">Ministerio del Interior</a>
+          </div>
+          <div class="col">
+            <a href="https://www.registrocivil.cl/" target="_blank" class="list-group-item list-group-item-action text-center fw-semibold">Registro Civil</a>
+          </div>
+          <div class="col">
+            <a href="https://www.pjud.cl/" target="_blank" class="list-group-item list-group-item-action text-center fw-semibold">Poder Judicial</a>
+          </div>
+          <div class="col">
+            <a href="https://www.sii.cl/" target="_blank" class="list-group-item list-group-item-action text-center fw-semibold">Servicio de Impuestos Internos</a>
+          </div>
+          <div class="col">
+            <a href="https://www.bcn.cl/" target="_blank" class="list-group-item list-group-item-action text-center fw-semibold">Biblioteca del Congreso Nacional</a>
+          </div>
+        </div>
+      </div>
+
+    </div> <!-- /tab-content -->
+  </div>
+</section>
+
+<!-- ESTILOS -->
+<style>
+/* ===== Hover general ===== */
+.hover-scale {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.hover-scale:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+/* ===== IMÁGENES ===== */
+.thumb-img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.thumb-img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+}
+
+/* ===== Lightbox imágenes/videos ===== */
+.lightbox {
+  display: none;
+  position: fixed;
+  z-index: 1050;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.85);
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.3s ease;
+}
+.expanded-img,
+.expanded-video {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 10px;
+  box-shadow: 0 4px 30px rgba(255,255,255,0.3);
+  animation: zoomIn 0.4s ease;
+  cursor: zoom-out;
+}
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+@keyframes zoomIn {
+  from {transform: scale(0.8); opacity: 0.5;}
+  to {transform: scale(1); opacity: 1;}
+}
+
+/* ===== VIDEOS ===== */
+.video-thumb {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.video-thumb:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+}
+.play-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.25);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 8px;
+}
+.video-wrapper:hover .play-overlay {
+  opacity: 1;
+}
+
+/* ===== ENLACES ===== */
+.list-group-item {
+  border: 1px solid #15497e;
+  border-radius: 8px;
+  background-color: #fff;
+  transition: all 0.3s ease;
+}
+.list-group-item:hover {
+  background-color: #f8f9fa;
+  transform: scale(1.03);
+}
+</style>
+
+<!-- SCRIPTS -->
+<script>
+/* --- Lightbox imágenes --- */
+function expandImage(img) {
+  const lightbox = document.getElementById('lightbox');
+  const expandedImg = document.getElementById('expandedImg');
+  expandedImg.src = img.src;
+  lightbox.style.display = 'flex';
+}
+function closeLightbox() {
+  document.getElementById('lightbox').style.display = 'none';
+}
+
+/* --- Lightbox videos --- */
+function expandVideo(src) {
+  const lightbox = document.getElementById('videoLightbox');
+  const expandedVideo = document.getElementById('expandedVideo');
+  expandedVideo.src = src;
+  expandedVideo.play();
+  lightbox.style.display = 'flex';
+}
+function closeVideo() {
+  const lightbox = document.getElementById('videoLightbox');
+  const expandedVideo = document.getElementById('expandedVideo');
+  expandedVideo.pause();
+  expandedVideo.src = "";
+  lightbox.style.display = 'none';
+}
+
+/* --- Buscador de enlaces --- */
+document.getElementById('searchInput').addEventListener('keyup', function() {
+  let input = this.value.toLowerCase();
+  let links = document.querySelectorAll('#linkList .col');
+  links.forEach(col => {
+    let text = col.innerText.toLowerCase();
+    col.style.display = text.includes(input) ? '' : 'none';
+  });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,774 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+  <div class="row gx-4 gy-4">
+
+    <!--COLUMNA IZQUIERDA -->
+    <div class="col-lg-8 col-md-12">
+
+      <div class="newspaper-container mb-4">
+
+       <!-- TITULO + FILTROS-->
+<div class="newspaper-header text-center mb-4">
+
+  <h1 class="display-5 fw-bold text-uppercase mb-1">Novedades</h1>
+
+  <!-- AUTOR -->
+  {% if noticia.autor %}
+  <div class="d-flex justify-content-center align-items-center mb-2 small text-muted">
+    {% if noticia.autor.perfil.foto %}
+      <img src="{{ noticia.autor.perfil.foto.url }}"
+           class="rounded-circle me-2"
+           width="32"
+           height="32"
+           alt="Autor">
+    {% endif %}
+    <span>
+      por {{ noticia.autor.get_full_name|default:noticia.autor.username }}
+    </span>
+  </div>
+  {% endif %}
+
+  <hr class="newspaper-line mx-auto">
+
+  <div class="newspaper-filters text-center mb-3 small fw-semibold">
+
+
+    <a href="?categoria=todos"
+       class="filter-item {% if categoria == 'todos' %}active{% endif %}"
+       data-filter="todos">Todos</a> |
+
+    <a href="?categoria=Empresa"
+       class="filter-item {% if categoria == 'Empresa' %}active{% endif %}"
+       data-filter="Empresa">Empresa</a> |
+
+    <a href="?categoria=Tecnología"
+       class="filter-item {% if categoria == 'Tecnología' %}active{% endif %}"
+       data-filter="Tecnología">Tecnología</a> |
+
+    <a href="?categoria=Proyectos"
+       class="filter-item {% if categoria == 'Proyectos' %}active{% endif %}"
+       data-filter="Proyectos">Proyectos</a> |
+
+    <a href="?categoria=Clientes"
+       class="filter-item {% if categoria == 'Clientes' %}active{% endif %}"
+       data-filter="Clientes">Clientes</a> |
+    
+    <a href="?categoria=Comunicados"
+       class="filter-item {% if categoria == 'Comunicados' %}active{% endif %}"
+       data-filter="Comunicados">Comunicados</a>
+
+   
+
+  </div>
+
+  <p>“El filtro te muestra las dos publicaciones más recientes por categoría”</p>
+
+</div>
+ <!-- CONTENIDO NOTICIAS-->
+        {% if noticias|length == 0 %}
+            <p class="text-center text-muted fw-semibold">No hay noticias disponibles.</p>
+        {% else %}
+
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+
+          {% for n in noticias %}
+          <div class="col">
+            <div class="news-card" data-category="{{ n.categoria }}">
+
+              <h5 class="news-title">{{ n.titulo }}</h5>
+
+              <div class="news-meta">
+                <span class="badge bg-danger me-2">{{ forloop.counter|stringformat:"02d" }}</span>
+                <span class="fw-semibold text-muted">{{ n.categoria }}</span>
+                <span class="float-end small">{{ n.fecha }}</span>
+              </div>
+
+              <hr>
+
+              <!-- Imagen -->
+              <div class="text-center mb-3">
+               <img 
+                    src="{% if n.imagen %}{{ n.imagen.url }}{% else %}{% static 'img/noticia_default.jpg' %}{% endif %}"
+                    class="news-img-original img-expandible"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalImagen"
+                    data-img="{% if n.imagen %}{{ n.imagen.url }}{% else %}{% static 'img/noticia_default.jpg' %}{% endif %}"
+                  >
+
+              </div>
+
+              <p class="small text-muted">{{ n.descripcion|truncatewords:35 }}</p>
+
+              {% if n.link %}
+              <a href="{{ n.link }}" target="_blank"
+                 class="btn btn-sm btn-rojo-fiscalia rounded-pill fw-semibold px-3">
+                IR AL LINK
+              </a>
+              {% endif %}
+
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+
+        <!-- PAGINACIÓN -->
+        <div class="newspaper-pagination">
+            <div class="np-line"></div>
+
+            <div class="np-controls">
+                {% if noticias.has_previous %}
+                <a href="?pagina={{ noticias.previous_page_number }}" class="np-btn">&larr; Anterior</a>
+                {% else %}
+                <span class="np-btn disabled">&larr; Anterior</span>
+                {% endif %}
+
+                <div class="np-pages">
+                    {% for num in noticias.paginator.page_range %}
+                        {% if num == noticias.number %}
+                            <span class="np-page active">{{ num }}</span>
+                        {% else %}
+                            <a href="?pagina={{ num }}" class="np-page">{{ num }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                {% if noticias.has_next %}
+                <a href="?pagina={{ noticias.next_page_number }}" class="np-btn">Siguiente &rarr;</a>
+                {% else %}
+                <span class="np-btn disabled">Siguiente &rarr;</span>
+                {% endif %}
+            </div>
+
+            <div class="np-line"></div>
+            
+        </div>
+
+        {% endif %}
+
+      </div>
+
+      
+      
+
+    </div>
+
+    <!-- COLUMNA DERECHA (CUMPLEAÑOS) -->
+    <div class="col-lg-4 col-md-12 d-flex flex-column gap-4">
+
+      <!-- CUMPLEAÑOS HOY-->
+      <div class="card border-0 shadow-sm rounded-4">
+
+        <div class="card-header text-white fw-bold text-center rounded-top-4" style="background-color:#1f3b83;">
+          🎂 CUMPLEAÑOS DE HOY
+        </div>
+
+        <ul class="list-group list-group-flush">
+          {% if cumple_hoy %}
+            {% for p in cumple_hoy %}
+            <li class="list-group-item small d-flex align-items-center justify-content-between">
+
+              <div class="d-flex align-items-center gap-2">
+                <img src="{{ p.imagen.url }}" class="rounded-circle"
+                     style="width:35px;height:35px;object-fit:cover;">
+                {{ p.user.first_name }} {{ p.user.last_name }}
+              </div>
+
+              <button class="btn btn-sm btn-outline-primary rounded-pill verTarjetaBtn"
+                      data-id="{{ p.user.id }}"
+                      data-nombre="{{ p.user.first_name }} {{ p.user.last_name }}"
+                      data-imagen="{{ p.imagen.url }}"
+                      data-bs-toggle="modal"
+                      data-bs-target="#modalTarjetaCumple">
+                <i class="bi bi-envelope-paper-heart-fill"></i>
+              </button>
+
+            </li>
+            {% endfor %}
+          {% else %}
+          <li class="list-group-item text-muted text-center">
+            Nadie cumple años hoy.
+          </li>
+          {% endif %}
+        </ul>
+
+        <button class="btn btn-primary btn-sm w-100 rounded-bottom-4"
+                data-bs-toggle="modal"
+                data-bs-target="#modalTodosCumples">
+          Ver todos los cumpleaños 🎂
+        </button>
+
+      </div>
+
+  
+
+
+<!-- 
+     LOGROS INSTITUCIONALES
+ -->
+<div class="marco-logro-wrapper">
+
+  {% if logros %}
+  <div id="carouselLogros"
+       class="carousel slide carrusel-logro"
+       data-bs-ride="carousel"
+       data-bs-interval="4500">
+
+    <div class="carousel-inner h-100">
+
+      {% for logro in logros %}
+      <div class="carousel-item h-100 {% if forloop.first %}active{% endif %}">
+
+        <!-- CONTENEDOR RELATIVO -->
+        <div class="logro-img-wrapper">
+
+          <!-- IMAGEN -->
+          <img src="{{ logro.imagen.url }}"
+               class="img-logro"
+               alt="Logro institucional">
+
+          <!-- TEXTO DEL LOGRO (SOLO SI EXISTE) -->
+          {% if logro.texto_logro %}
+          <div class="logro-texto-overlay">
+            {{ logro.texto_logro }}
+          </div>
+          {% endif %}
+
+        </div>
+
+      </div>
+      {% endfor %}
+
+    </div>
+
+    <!-- CONTROLES SOLO SI HAY MÁS DE UNO -->
+    {% if logros|length > 1 %}
+    <button class="carousel-control-prev"
+            type="button"
+            data-bs-target="#carouselLogros"
+            data-bs-slide="prev">
+      <span class="carousel-control-prev-icon"></span>
+    </button>
+
+    <button class="carousel-control-next"
+            type="button"
+            data-bs-target="#carouselLogros"
+            data-bs-slide="next">
+      <span class="carousel-control-next-icon"></span>
+    </button>
+    {% endif %}
+
+  </div>
+  {% endif %}
+
+  <!-- MARCO -->
+  <img src="{% static 'marco5.png' %}"
+       class="marco-logro-img"
+       alt="Marco institucional de logros">
+
+</div>
+
+
+
+
+
+    <!-- Banner -->
+  
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!--      MODAL EXPANDIR IMAGEN -->
+<div class="modal fade" id="modalImagen" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content bg-dark">
+      <div class="modal-body p-0">
+        <img id="imagenExpandida" src="" class="w-100" style="object-fit:contain;">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<!--      MODAL: TODOS LOS CUMPLEAÑOS -->
+<div class="modal fade" id="modalTodosCumples" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content rounded-4">
+
+      <div class="modal-header bg-primary text-white rounded-top-4">
+        <h5 class="modal-title">🎂 Cumpleaños del mes</h5>
+        <button type="button" class="btn-close bg-white" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <input type="text" id="buscadorCumples" class="form-control mb-3"
+               placeholder="Buscar por nombre, apellido, día o mes...">
+        <ul class="list-group" id="listaCumples">
+          {% for p in cumples_mes %}
+          <li class="list-group-item item-cumple"
+              data-search="{{ p.user.first_name }} {{ p.user.last_name }} {{ p.fecha_nacimiento|date:'d m' }}">
+            <div class="d-flex align-items-center gap-3">
+              <img src="{{ p.imagen.url }}" class="rounded-circle"
+                   style="width:45px;height:45px;object-fit:cover;">
+              <div>
+                <strong>{{ p.user.first_name }} {{ p.user.last_name }}</strong><br>
+                <small class="text-muted">{{ p.fecha_nacimiento|date:"d/m" }}</small>
+              </div>
+            </div>
+
+          </li>
+          {% endfor %}
+
+        </ul>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- TARJETA DE CUMPLEAÑOS — ESTILO ORIGINAL SIN MODAL-->
+<div id="overlayTarjetaCumple" 
+     style="
+       display:none;
+       position:fixed;
+       inset:0;
+       background:rgba(0,0,0,0.55);
+       z-index:99999;
+       justify-content:center;
+       align-items:center;
+     ">
+
+  <div style="
+       width:90%;
+       max-width:1100px;
+       height:780px;
+       background-image:url('{% static 'img/cumpleaños.png' %}');
+       background-size:cover;
+       background-position:center;
+       border-radius:15px;
+       position:relative;
+       overflow:hidden;
+     ">
+      <button onclick="cerrarTarjetaOverlay()" 
+              style="
+                position:absolute;
+                top:15px;
+                right:15px;
+                width:38px;
+                height:38px;
+                background:white;
+                border:none;
+                border-radius:50%;
+                font-size:18px;
+                cursor:pointer;
+                z-index:1000;
+              ">
+        ✖
+      </button>
+      <div id="confettiOverlay" 
+           style="position:absolute; inset:0; z-index:50; pointer-events:none;"></div>
+      <div style="
+            position:absolute;
+            top:50%;
+            left:50%;
+            transform:translate(-50%,-50%);
+            background:white;
+            padding:40px;
+            width:90%;
+            max-width:480px;
+            border-radius:18px;
+            text-align:center;
+            z-index:200;
+            box-shadow:0 0 20px rgba(0,0,0,0.25);
+          ">
+          <img id="fotoOverlayCumple"
+               src=""
+               class="rounded-circle mb-3"
+               style="width:120px; height:120px; object-fit:cover; border:4px solid #2c4862;">
+          <h4 id="nombreOverlayCumple" class="fw-bold" style="color:#2c4862;"></h4>
+          <p style="font-size:1.1rem; color:#2c4862;">
+            ¡Felicidades en tu día! Como equipo de la 
+            <strong>MDS Mirai Digital Solutions</strong>, te deseamos un nuevo año lleno de 
+            logros, bienestar y mucha felicidad. 🎈
+          </p>
+
+      </div>
+  </div>
+</div>
+
+
+
+
+<!-- 
+     SCRIPTS
+ -->
+<script>
+
+  /* CONFETTI */
+document.addEventListener("DOMContentLoaded", function () {
+  const confetti = document.getElementById("confetti");
+
+  function addConfetti() {
+    const piece = document.createElement("div");
+    piece.style.position = "absolute";
+    piece.style.width = "8px";
+    piece.style.height = "12px";
+    piece.style.background = `hsl(${Math.random()*360}, 90%, 60%)`;
+    piece.style.top = "-20px";
+    piece.style.left = Math.random()*100 + "%";
+    piece.style.opacity = 0.9;
+    piece.style.transform = `rotate(${Math.random()*360}deg)`;
+    piece.style.animation = "fall 1.8s linear forwards";
+
+    confetti.appendChild(piece);
+    setTimeout(() => piece.remove(), 1800);
+  }
+
+  setInterval(addConfetti, 70);
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+
+    /* =  EXPANDIR IMAGEN = */
+    document.querySelectorAll(".img-expandible").forEach(img => {
+        img.onclick = () => {
+            document.getElementById("imagenExpandida").src = img.dataset.img;
+        };
+    });
+
+
+    /* = MODAL TARJETA PERSONALIZADA = */
+    document.querySelectorAll(".verTarjetaBtn").forEach(btn => {
+        btn.onclick = () => {
+            document.getElementById("nombreCumple").textContent = btn.dataset.nombre;
+            document.getElementById("fotoCumple").src = btn.dataset.imagen;
+        };
+    });
+
+
+    /* =BUSCADOR DE CUMPLEAÑOS = */
+    const buscador = document.getElementById("buscadorCumples");
+    const items = document.querySelectorAll("#listaCumples .item-cumple");
+
+    buscador.addEventListener("keyup", () => {
+        const q = buscador.value.toLowerCase().trim();
+
+        items.forEach(li => {
+            const data = li.dataset.search.toLowerCase();
+            li.style.display = data.includes(q) ? "" : "none";
+        });
+    });
+
+
+    
+
+});
+
+/* TARJETA DE CUMPLEAÑOS — OVERLAY SIN MODAL*/
+
+document.querySelectorAll(".verTarjetaBtn").forEach(btn => {
+    btn.addEventListener("click", function (e) {
+        e.preventDefault(); 
+
+        const nombre = this.dataset.nombre;
+        const imagen = this.dataset.imagen;
+
+        document.getElementById("nombreOverlayCumple").textContent = nombre;
+        document.getElementById("fotoOverlayCumple").src = imagen;
+
+        document.getElementById("overlayTarjetaCumple").style.display = "flex";
+    });
+});
+
+/* Cerrar overlay */
+function cerrarTarjetaOverlay() {
+    document.getElementById("overlayTarjetaCumple").style.display = "none";
+}
+
+/* Confetti en overlay */
+function lluviaConfettiOverlay() {
+    const area = document.getElementById("confettiOverlay");
+    if (!area) return;
+
+    const piece = document.createElement("div");
+    piece.style.position = "absolute";
+    piece.style.width = "8px";
+    piece.style.height = "12px";
+    piece.style.background = `hsl(${Math.random()*360}, 90%, 60%)`;
+    piece.style.top = "-20px";
+    piece.style.left = Math.random()*100 + "%";
+    piece.style.opacity = 0.9;
+    piece.style.transform = `rotate(${Math.random()*360}deg)`;
+    piece.style.animation = "fall 1.8s linear forwards";
+
+    area.appendChild(piece);
+
+    setTimeout(() => piece.remove(), 1800);
+}
+
+setInterval(lluviaConfettiOverlay, 70);
+
+  const chk = document.getElementById("enLogros");
+  const box = document.getElementById("boxTextoLogro");
+
+  function toggleBox(){
+    if(chk.checked) box.classList.remove("d-none");
+    else box.classList.add("d-none");
+  }
+  chk.addEventListener("change", toggleBox);
+  toggleBox();
+
+
+</script>
+
+
+
+
+
+{% endblock %}
+
+
+{% block extra_css %}
+<style>
+
+.logro-img-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+
+/*    LOGROS · TEXTO DEL LOGRO */
+.logro-texto-overlay {
+  position: absolute;
+  top: 2.2%;               
+  left: 50%;
+  transform: translateX(-50%);
+  width: 76%;             
+
+  background: linear-gradient(
+    to bottom,
+    rgba(31, 59, 131, 0.92),
+    rgba(31, 59, 131, 0.7)
+  );
+
+  color: #ffffff;
+  padding: 8px 12px;
+  border-radius: 12px;
+
+  font-weight: 600;
+  font-size: 0.8rem;
+  line-height: 1.3;
+
+  text-align: center;     
+  display: flex;           
+  align-items: center;
+  justify-content: center;
+
+  z-index: 6;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.35);
+}
+
+
+/*    LOGROS · MARCO GENERAL */
+.marco-logro-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  aspect-ratio: 3.9 / 4.1;
+  margin: auto;
+}
+
+/*    LOGROS · CARRUSEL ) */
+.carrusel-logro {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+
+  padding-top: 13%;       
+  padding-bottom: 13%;
+  padding-left: 13%;
+  padding-right: 13%;
+
+  box-sizing: border-box;
+}
+
+/* 
+   LOGROS · IMAGEN */
+.img-logro {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%; 
+  display: block;
+}
+
+/* LOGROS · MARCO GRÁFICO ENCIMA*/
+.marco-logro-img {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  pointer-events: none;
+}
+
+
+/* ANIMACIÓN CONFETTI*/
+@keyframes fall {
+  to {
+    transform: translateY(800px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* FILTROS*/
+.filter-item {
+  cursor: pointer;
+}
+
+.filter-item.active {
+  color: #d10000 !important;
+  font-weight: 700;
+}
+
+/*NOTICIAS */
+.news-img-original {
+  width: 70%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 6px;
+  transition: 0.2s;
+}
+
+.news-img-original:hover {
+  opacity: 0.9;
+}
+
+.newspaper-container {
+  background: #efefef;
+  padding: 25px;
+  border-radius: 14px;
+  border: 1px solid #d0d0d0;
+}
+
+.newspaper-header h1 {
+  font-family: 'Times New Roman', serif;
+  font-size: 2.3rem;
+  font-weight: 900;
+  color: #1f3b83;
+}
+
+.newspaper-line {
+  width: 80px;
+  border: 2px solid #d10000;
+}
+
+.news-card {
+  background: #d7d6d6;
+  border: 1px solid #bfbfbf;
+  padding: 14px;
+  border-radius: 12px;
+  height: 340px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.news-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.15rem;
+  margin-bottom: 5px;
+}
+
+.news-meta {
+  font-size: 0.78rem;
+  margin-bottom: 5px;
+}
+
+/* MÓDULOS RÁPIDOS */
+.modules-container {
+  margin-top: 25px;
+}
+
+.col-lg-1-5 {
+  flex: 0 0 auto;
+  width: 12.5%;
+}
+
+.modulo-img {
+  width: 100%;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+/* PAGINACIÓN */
+.newspaper-pagination {
+  text-align: center;
+  margin: 25px 0;
+}
+
+.np-line {
+  width: 90%;
+  height: 2px;
+  background: #c5c5c5;
+  margin: 6px auto;
+}
+
+.np-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  margin: 10px 0;
+  flex-wrap: wrap;
+}
+
+.np-btn {
+  font-family: "Times New Roman", serif;
+  font-size: 0.9rem;
+  color: #1f3b83;
+  cursor: pointer;
+  text-decoration: none;
+  padding: 4px 10px;
+  border-radius: 4px;
+  transition: 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.np-page.active {
+  background: #1f3b83;
+  color: white;
+  font-weight: bold;
+}
+
+/*    BOTONES */
+.btn-rojo-fiscalia {
+  background-color: #d10000 !important;
+  color: white !important;
+  border: none !important;
+  transition: 0.2s ease-in-out;
+}
+
+.btn-rojo-fiscalia:hover {
+  background-color: #a30000 !important;
+}
+</style>
+{% endblock %}

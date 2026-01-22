@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}{{ noticia.titulo }}{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+
+  <span class="badge bg-secondary mb-2">
+    {{ noticia.categoria }}
+  </span>
+
+  <h2 class="fw-bold mb-2">
+    {{ noticia.titulo }}
+  </h2>
+
+  <!-- AUTOR + FECHA -->
+  <div class="d-flex align-items-center mb-3 text-muted small">
+
+    {% if noticia.autor and noticia.autor.perfil.foto %}
+      <img src="{{ noticia.autor.perfil.foto.url }}"
+           class="rounded-circle me-2"
+           width="36"
+           height="36"
+           alt="Autor">
+    {% endif %}
+
+    {% if noticia.autor %}
+      <span>
+        por {{ noticia.autor.get_full_name|default:noticia.autor.username }}
+      </span>
+      <span class="mx-2">•</span>
+    {% endif %}
+
+    <span>
+      {{ noticia.fecha|date:"d M Y" }}
+    </span>
+
+  </div>
+
+  {% if noticia.imagen %}
+    <img src="{{ noticia.imagen.url }}"
+         class="img-fluid rounded-4 mb-4">
+  {% endif %}
+
+  <p class="fs-5">
+    {{ noticia.descripcion }}
+  </p>
+
+  {% if noticia.video_url %}
+    <div class="ratio ratio-16x9 my-4">
+      <iframe src="{{ noticia.video_url }}"
+              frameborder="0"
+              allowfullscreen></iframe>
+    </div>
+  {% endif %}
+
+  {% if noticia.link %}
+    <a href="{{ noticia.link }}"
+       target="_blank"
+       class="btn btn-outline-primary">
+      🔗 Enlace relacionado
+    </a>
+  {% endif %}
+
+</div>
+{% endblock %}

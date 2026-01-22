@@ -1,0 +1,362 @@
+{% load static %}
+<!doctype html>
+<html lang="es">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Portal Institucional - Fiscalía Metropolitana Sur</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+
+html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background: #f2f4f7;
+}
+
+/* HERO */
+.hero {
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 45% 55%;
+    background: #fff;
+}
+
+.hero-img {
+    background: #000;
+    background-image: url("{% static 'img/index1.png' %}");
+    background-size: 167%;
+    background-repeat: no-repeat;
+    background-position: left center;
+    filter: brightness(0.90);
+    clip-path: polygon(0 0, 100% 0, 75% 100%, 0 100%);
+    height: 100%;
+}
+
+/* TEXTO */
+.hero-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 85px;
+}
+
+.hero-logo {
+    max-width: 240px;
+    margin-bottom: 25px;
+}
+
+.hero-title {
+    font-size: 2.8rem;
+    font-weight: 900;
+    color: #1f3b83;
+}
+
+.hero-sub {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2850ad;
+    margin-bottom: 15px;
+}
+
+.hero-text {
+    max-width: 450px;
+    margin: 5px 0 25px 0;
+    color: #444;
+    line-height: 1.45rem;
+}
+
+/* BOTÓN SESIÓN */
+.btn-session {
+    font-size: 0.95rem;
+    padding: 8px 18px;
+    border-radius: 8px;
+    width: fit-content;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #1260e4;
+    border: none;
+    color: #f2f4f7;
+}
+.btn-session:hover {
+    background: #0d4ec3;
+}
+
+/* TARJETAS */
+.cards-row {
+    display: flex;
+    gap: 28px;
+    margin-top: 20px;
+}
+
+.flip-card {
+    background-color: transparent;
+    width: 100%;
+    max-width: 280px;
+    height: 220px;
+    perspective: 1000px;
+}
+
+
+.flip-inner {
+    width: 100%;
+    height: 100%;
+    transition: transform .7s;
+    transform-style: preserve-3d;
+    cursor: pointer;
+}
+
+.flip-card:hover .flip-inner {
+    transform: rotateY(180deg);
+}
+
+.flip-front, .flip-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 18px;
+    backface-visibility: hidden;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.12);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.flip-front {
+    background: white;
+}
+
+.flip-front i {
+    font-size: 2rem;
+    color: #1f3b83;
+}
+
+.flip-back {
+    background: #1f3b83;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    transform: rotateY(180deg);
+}
+
+/* FOOTER */
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: #1f3b83;
+    color: white;
+    padding: 5px;
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+/* =MODAL FIX =*/
+.modal-content {
+    position: relative !important;
+    z-index: 99999 !important;
+}
+
+.btn-close {
+    z-index: 100000 !important;
+    position: absolute !important;
+    top: 12px;
+    right: 12px;
+}
+
+/* =*/
+/*     MENSAJES PROFESIONALES – FISCALÍA INSTITUCIONAL       */
+/* =*/
+.alert-container {
+    margin-bottom: 20px;
+}
+
+.alert-box {
+    background: #fdecec;
+    border-left: 5px solid #c62828;
+    border-radius: 10px;
+    padding: 12px 15px;
+    text-align: left;
+    margin-bottom: 12px;
+    animation: fadeIn 0.5s ease;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.alert-box i {
+    font-size: 1.2rem;
+    color: #b71c1c;
+    margin-top: 2px;
+}
+
+.alert-box p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #5a0000;
+    font-weight: 600;
+    line-height: 1.25rem;
+}
+
+/* Animación */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+</style>
+</head>
+
+<body>
+
+<section class="hero">
+
+    <!-- IMAGEN -->
+    <div class="hero-img"></div>
+
+    <!-- CONTENIDO -->
+    <div class="hero-content">
+
+        <img src="{% static 'img/logo.png' %}" class="hero-logo">
+
+        <h1 class="hero-title">Plataforma Corporativa</h1>
+        <h2 class="hero-sub">Soluciones Digitales Empresariales</h2>
+
+        <p class="hero-text">
+            Centraliza herramientas, información y servicios tecnológicos
+            para impulsar la <strong class="text-primary">eficiencia y crecimiento digital</strong>
+            de tu organización.
+        </p>
+
+        <!-- BOTÓN LOGIN -->
+        <button class="btn btn-session"
+                data-bs-toggle="modal" data-bs-target="#loginModal">
+            <i class="bi bi-box-arrow-in-right"></i> Acceso Corporativo
+        </button>
+
+        <!-- TARJETAS -->
+        <div class="cards-row">
+            <div class="flip-card">
+                <div class="flip-inner">
+                    <div class="flip-front">
+                        <i class="bi bi-bullseye"></i>
+                        <p class="mt-3 mb-0 fw-semibold">Propósito</p>
+                    </div>
+                    <div class="flip-back">
+                        Diseñar y desarrollar soluciones digitales innovadoras que optimicen procesos,
+                        potencien la productividad y agreguen valor real a las empresas.
+                    </div>
+                </div>
+            </div>
+
+            <div class="flip-card">
+                <div class="flip-inner">
+                    <div class="flip-front">
+                        <i class="bi bi-lightbulb"></i>
+                        <p class="mt-3 mb-0 fw-semibold">Visión</p>
+                    </div>
+                    <div class="flip-back">
+                        Ser un socio tecnológico estratégico, reconocido por la calidad,
+                        seguridad e innovación continua en soluciones digitales.
+                    </div>
+                </div>
+            </div>
+
+            <div class="flip-card">
+                <div class="flip-inner">
+                    <div class="flip-front">
+                        <i class="bi bi-folder2-open"></i>
+                        <p class="mt-3 mb-0 fw-semibold">Servicios Digitales</p>
+                    </div>
+                    <div class="flip-back">
+                        Accede a plataformas, herramientas y recursos digitales diseñados
+                        para una gestión empresarial moderna, integrada y segura.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- MODAL LOGIN -->
+<div class="modal fade" id="loginModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow">
+
+        <!-- BOTÓN CERRAR -->
+        <button type="button"
+                class="btn-close position-absolute end-0 m-3"
+                data-bs-dismiss="modal"
+                aria-label="Close"></button>
+
+        <div class="modal-body p-4 text-center">
+
+            <img src="{% static 'img/logo.png' %}" style="max-width:160px;" class="mb-3">
+
+            <h4 class="text-primary fw-bold mb-4">Acceso Institucional</h4>
+
+            <!--  MENSAJES PROFESIONALES  -->
+            {% if messages %}
+            <div class="alert-container">
+                {% for message in messages %}
+                <div class="alert-box">
+                    <i class="bi bi-exclamation-octagon-fill"></i>
+                    <p>{{ message }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+    
+
+            <form method="POST" action="/login_usuario/">
+                {% csrf_token %}
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text bg-white">
+                        <i class="bi bi-person-fill text-primary"></i>
+                    </span>
+                    <input type="text" name="username" class="form-control form-control-lg" placeholder="Usuario institucional" required>
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text bg-white">
+                        <i class="bi bi-lock-fill text-primary"></i>
+                    </span>
+                    <input type="password" name="password" class="form-control form-control-lg" placeholder="Contraseña" required>
+                </div>
+
+                <button class="btn btn-primary btn-lg w-100">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Ingresar
+                </button>
+
+            </form>
+
+        </div>
+    </div>
+  </div>
+</div>
+
+<footer>MDS Mirai Digital Solutions — © 2026</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Abrir modal automáticamente si hay mensajes -->
+{% if messages %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var modal = new bootstrap.Modal(document.getElementById('loginModal'));
+    modal.show();
+});
+</script>
+{% endif %}
+
+</body>
+</html>

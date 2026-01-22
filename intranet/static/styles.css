@@ -1,0 +1,669 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Source Sans 3', sans-serif;
+   background-color: #d1cfcf !important;
+  color: #333;
+  overflow-x: hidden;
+}
+
+  /* SIDEBAR*/
+.sidebar {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  height: calc(100vh - 36px);
+  width: 240px;
+
+  /* Fondo base elegante */
+  background: linear-gradient(
+    180deg,
+    rgba(18, 28, 80, 0.92),
+    rgba(6, 12, 40, 0.96)
+  );
+
+  color: #f1f5ff;
+  padding: 20px 18px;
+  border-radius: 22px;
+
+  box-shadow:
+    0 0 25px rgba(0, 255, 255, 0.12),
+    inset 0 0 20px rgba(0, 255, 255, 0.05);
+
+  transition: all 0.35s ease;
+  z-index: 1030;
+  overflow: hidden;
+}
+.sidebar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: url("/static/img/nav.png") no-repeat center center;
+  background-size: 100% 100%;
+
+  pointer-events: none;
+  z-index: 1;
+}
+
+
+.sidebar:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+}
+
+/* Enlaces de navegación */
+.sidebar .nav-link {
+  color: #f8f9fa;
+  font-weight: 500;
+  margin: 8px 15px;
+  padding: 10px 15px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar .nav-link i {
+  margin-right: 10px;
+  font-size: 1.1rem;
+}
+
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #111111;
+  transform: translateX(5px);
+}
+
+/* HEADER SUPERIOR*/
+ .top-header {
+   position: relative; 
+  margin-left: 270px; 
+  margin-top: 20px;
+  margin-right: 20px;
+  background: linear-gradient(rgba(255, 255, 255, 0.92), rgba(245,245,245,0.92));
+  border: 1px solid rgba(31, 59, 131, 0.2);
+  border-bottom: 2px solid #1f3b83;
+  border-radius: 15px;
+  padding: 12px 25px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(6px);
+  z-index: 1025;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.top-header:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.top-header a {
+  color: #1f3b83;
+  font-weight: 600;
+  margin: 0 15px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.top-header a:hover {
+  color: #ff0707;
+  text-shadow: 0 0 5px rgba(255, 50, 50, 0.5);
+}
+
+/* MAIN CONTENT (ÁREA DE TRABAJO) */
+.main-content {
+  margin-left: 270px;
+  margin-top: 20px;
+  padding: 30px 40px;
+  background: #f3efea;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  display: block;
+  min-height: calc(100vh - 200px);
+  transition: all 0.4s ease;
+}
+
+.main-content:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+
+/* FOOTER */
+footer {
+    
+    bottom: 0;
+    width: 100%;
+    background: #1f3b83;
+    color: white;
+    padding: 5px;
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+/* INDEX (INTRANET INICIO) */
+.index-wrapper {
+  margin-left: 270px;
+  margin-top: 120px;
+  padding: 30px;
+  background: transparent;
+}
+
+.index-body {
+  background: rgba(255,255,255,0.92);
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  padding: 30px;
+  backdrop-filter: blur(5px);
+}
+
+.index-header h2 {
+  color: #1f3b83;
+  font-weight: 700;
+}
+
+.index-header p {
+  color: #555;
+  margin-top: 5px;
+}
+
+/* Tarjetas de módulos */
+.index-card {
+  background: linear-gradient(180deg, #f9f9ff 0%, #ffffff 100%);
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 15px;
+  text-align: center;
+  padding: 25px 20px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.index-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+.index-card i {
+  font-size: 2rem;
+  color: #1f3b83;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.index-card h5 {
+  font-weight: 600;
+  color: #1f3b83;
+  margin-bottom: 5px;
+}
+
+.index-card p {
+  color: #555;
+  font-size: 0.9rem;
+  margin: 0;
+}
+.modal-content {
+  position: relative;
+  z-index: 1000;
+}
+.btn-close {
+  z-index: 1100;
+  cursor: pointer;
+}
+
+/* MODAL DE PERFIL PROFESIONAL */
+.modal {
+  z-index: 2000 !important;
+}
+
+#perfilModal .modal-dialog {
+  max-width: 1200px !important;
+  width: 95%;
+}
+
+
+
+#perfilModal .modal-content {
+  border-radius: 16px;
+  border: 1px solid rgba(31, 59, 131, 0.2);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  background: #fff;
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+}
+
+#perfilModal .modal-header {
+  background: linear-gradient(90deg, #f7f9fc 0%, #e8ecfa 100%);
+  border-bottom: 1px solid rgba(31, 59, 131, 0.25);
+  padding: 1rem 1.5rem;
+}
+
+#perfilModal .modal-title {
+  color: #1f3b83;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+#perfilModal .modal-body {
+  padding: 2rem;
+  background: #fff;
+  max-height: 75vh;
+  overflow-y: auto;
+}
+
+#perfilModal .perfil-foto {
+  width: 130px;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #1f3b83;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#perfilModal .perfil-foto:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 18px rgba(31, 59, 131, 0.25);
+}
+
+#perfilModal label.form-label {
+  font-weight: 600;
+  color: #1f3b83;
+}
+
+#perfilModal input.form-control,
+#perfilModal select.form-select {
+  border: 1px solid rgba(31, 59, 131, 0.25);
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+#perfilModal input.form-control:focus,
+#perfilModal select.form-select:focus {
+  border-color: #1f3b83;
+  box-shadow: 0 0 0 0.2rem rgba(31, 59, 131, 0.15);
+}
+
+#perfilModal .modal-footer {
+  background: #f8f9fb;
+  border-top: 1px solid rgba(31, 59, 131, 0.2);
+  padding: 1rem 1.5rem;
+}
+
+#perfilModal .btn-primary {
+  background: #1f3b83;
+  border: none;
+  font-weight: 600;
+  border-radius: 10px;
+  padding: 0.5rem 1.25rem;
+  transition: background 0.3s ease;
+}
+
+#perfilModal .btn-primary:hover {
+  background: #2b4fa8;
+}
+
+#perfilModal .btn-outline-secondary {
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+body.modal-open .main-content {
+  transform: none !important;
+}
+
+.modal.fade .modal-dialog {
+  transform: translateY(-20px);
+  transition: transform 0.3s ease-out;
+}
+
+.modal.fade.show .modal-dialog {
+  transform: translateY(0);
+}
+input.form-control-lg {
+  border-radius: 10px !important;
+  padding: 12px;
+  border: 1.5px solid #d6d6d6;
+}
+
+.input-group-text {
+  border-radius: 10px 0 0 10px !important;
+  border: 1.5px solid #d6d6d6;
+  border-right: 0;
+}
+
+.modal-content {
+  border-radius: 20px !important;
+}
+
+.btn-primary {
+  background: #1f3b83 !important;
+  border: none !important;
+  border-radius: 10px !important;
+  padding: 12px !important;
+  font-weight: 600 !important;
+}
+
+.alert-info {
+  border-radius: 10px !important;
+}
+
+/*  FORMULARIO INSTITUCIONAL FISCALÍA  */
+.login-form-fiscalia {
+  background-color: #ffffff;
+  padding: 25px 30px;
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/*  Etiquetas y placeholders  */
+.login-form-fiscalia .form-control {
+  height: 45px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+.login-form-fiscalia .form-control::placeholder {
+  color: #a0a0a0;
+}
+
+/*  Input group  */
+.login-form-fiscalia .input-group-text {
+  border-radius: 8px 0 0 8px;
+  background-color: #f7f8fa;
+  border: 1px solid #ced4da;
+  font-size: 1.1rem;
+}
+
+.login-form-fiscalia .form-control {
+  border-left: none;
+  border: 1px solid #ced4da;
+  transition: border-color 0.3s;
+}
+
+.login-form-fiscalia .form-control:focus {
+  border-color: #1f3b83;
+  box-shadow: 0 0 0 2px rgba(31, 59, 131, 0.2);
+}
+
+/*  Botón principal  */
+.btn-fiscalia {
+  background-color: #1f3b83;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 10px 0;
+  transition: all 0.2s ease-in-out;
+  border: none;
+}
+
+.btn-fiscalia:hover {
+  background-color: #16306d;
+  transform: translateY(-2px);
+}
+
+/*  Textos inferiores  */
+.login-form-fiscalia p, .login-form-fiscalia small {
+  color: #5a5a5a;
+  font-size: 0.85rem;
+}
+
+.login-form-fiscalia a {
+  color: #1f3b83;
+}
+
+.login-form-fiscalia a:hover {
+  text-decoration: underline;
+}
+.btn-fiscalia {
+  background-color: #1f3b83;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  color: white;
+  padding: 10px 0;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-fiscalia:hover {
+  background-color: #142961;
+  transform: translateY(-2px);
+}
+
+.login-form-fiscalia .form-control:focus {
+  border-color: #1f3b83;
+  box-shadow: 0 0 0 2px rgba(31, 59, 131, 0.25);
+}
+
+.login-form-fiscalia .input-group-text {
+  background-color: #f8f9fa;
+}
+
+/*  FORMULARIO DE REGISTRO - ESTILO FISCALÍA  */
+.register-form-fiscalia {
+  background-color: #ffffff;
+  padding: 25px 30px;
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 450px;
+  margin: 0 auto;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/*  Campos  */
+.register-form-fiscalia .form-control {
+  height: 45px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+.register-form-fiscalia .form-control::placeholder {
+  color: #a0a0a0;
+}
+
+/*  Input group  */
+.register-form-fiscalia .input-group-text {
+  border-radius: 8px 0 0 8px;
+  background-color: #f7f8fa;
+  border: 1px solid #ced4da;
+  font-size: 1.1rem;
+}
+
+.register-form-fiscalia .form-control {
+  border-left: none;
+  border: 1px solid #ced4da;
+  transition: border-color 0.3s;
+}
+
+.register-form-fiscalia .form-control:focus {
+  border-color: #1f3b83;
+  box-shadow: 0 0 0 2px rgba(31, 59, 131, 0.2);
+}
+
+/*  Botón de registro  */
+.btn-fiscalia-registrar {
+  background-color: #1f3b83;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 10px 0;
+  transition: all 0.2s ease-in-out;
+  border: none;
+}
+
+.btn-fiscalia-registrar:hover {
+  background-color: #16306d;
+  transform: translateY(-2px);
+}
+
+/*  Texto inferior  */
+.register-form-fiscalia small {
+  color: #5a5a5a;
+  font-size: 0.85rem;
+}
+
+.register-form-fiscalia a {
+  color: #1f3b83;
+  text-decoration: none;
+}
+
+.register-form-fiscalia a:hover {
+  text-decoration: underline;
+}
+
+.fiscal-img-wrapper {
+  background-color: #1F3B83;
+  border: 2px;
+  border-radius: 0.75rem;
+  padding: 6px;
+  width: 100%;
+  max-width: 220px;
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
+}
+.fiscal-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0.5rem;
+}
+
+/*  Tarjetas */
+.card {
+  border: none;
+  border-radius: 0.75rem;
+  background-color:  #99acdb;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0.5rem 1rem rgba(67, 12, 195, 0.3);
+}
+
+/* Texto institucional */
+.card-body h6 {
+  color: var(--bs-warning);
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+.card-body h5 {
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+.card-body p {
+  color: rgba(255,255,255,0.85);
+  font-size: 0.9rem;
+}
+
+/* 🔹 Botón */
+.ver-mas-btn {
+  border-radius: 50rem;
+  font-weight: 600;
+  padding: 0.4rem 1.1rem;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+  align-self: center;
+}
+.ver-mas-btn:hover {
+  background-color: var(--bs-warning);
+  border-color: var(--bs-warning);
+  color:  #1F3B83;
+}
+/* ================================
+   RESPONSIVE NAV + HEADER + SLIDER
+================================== */
+@media (max-width: 992px) {
+  /* Sidebar */
+  .sidebar {
+    width: 100%;
+    position: relative;
+    height: auto;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 10px 15px;
+    text-align: center;
+  }
+
+  .sidebar .nav-link {
+    display: inline-block;
+    margin: 5px 10px;
+  }
+
+  /* Header superior */
+  .top-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    left: 0;
+    right: 0;
+    margin-left: 0;
+    top: 0;
+    border-radius: 0;
+  }
+
+  .top-header .d-flex.flex-wrap {
+    justify-content: center !important;
+    margin-top: 10px;
+    margin-bottom: 5px;
+  }
+
+  /* Botones superiores */
+  .top-header .btn {
+    font-size: 0.75rem;
+    padding: 5px 10px;
+  }
+
+  /* Contenido principal */
+  .main-content {
+    margin: 0;
+    padding: 15px;
+    border-radius: 0;
+  }
+
+  /* Slider (carruseles) */
+  .carousel,
+  .carousel-item img {
+    height: auto !important;
+    max-height: 300px;
+    object-fit: contain;
+  }
+
+  /* Footer */
+  footer {
+    margin: 0;
+    border-radius: 0;
+    padding: 10px;
+    font-size: 0.85rem;
+  }
+}
+
+/* Ultra móvil */
+@media (max-width: 576px) {
+  .top-header h5 {
+    font-size: 0.9rem;
+  }
+
+  .top-header .btn {
+    font-size: 0.7rem;
+    padding: 4px 8px;
+  }
+}
+

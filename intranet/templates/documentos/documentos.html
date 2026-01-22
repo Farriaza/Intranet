@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+
+{% block title %}Documentos{% endblock %}
+{% block page_title %}Gestión Documental{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+
+  <!-- CABECERA -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+
+    <h4 class="mb-0">
+      <i class="bi bi-folder2-open me-2"></i>
+      Gestión Documental
+    </h4>
+
+    <!-- BUSCADOR -->
+    <form method="get" class="d-flex" style="max-width: 350px;">
+      <input
+        type="search"
+        name="q"
+        class="form-control form-control-sm me-2"
+        placeholder="Buscar documento..."
+        value="{{ query }}"
+      >
+      <button class="btn btn-sm btn-outline-secondary">
+        <i class="bi bi-search"></i>
+      </button>
+    </form>
+
+    <!-- BOTÓN SUBIR -->
+    {% if user.is_staff %}
+      <button
+        class="btn btn-sm btn-primary"
+        data-bs-toggle="collapse"
+        data-bs-target="#formSubida"
+      >
+        <i class="bi bi-upload me-1"></i>
+        Subir
+      </button>
+    {% endif %}
+
+  </div>
+
+  <!-- FORMULARIO SUBIDA -->
+  {% if user.is_staff %}
+  <div class="collapse mb-4" id="formSubida">
+    <div class="card shadow-sm border-0">
+      <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit" class="btn btn-primary btn-sm">
+            Guardar documento
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- CATEGORÍAS -->
+  <div class="row g-4">
+
+    <!-- REGLAMENTOS -->
+    <div class="col-md-4">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-header fw-semibold bg-light text-center">
+          📘 Reglamentos
+        </div>
+
+        <ul class="list-group list-group-flush">
+          {% for doc in documentos_por_categoria.REGLAMENTOS %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+
+              <a href="{{ doc.archivo.url }}" target="_blank">
+                <i class="bi bi-file-earmark-text me-2"></i>
+                {{ doc.titulo }}
+              </a>
+
+              {% if user.is_staff %}
+                <a
+                  href="{% url 'eliminar_documento' doc.id %}"
+                  class="btn btn-sm btn-outline-danger"
+                  onclick="return confirm('¿Eliminar este documento?');"
+                >
+                  <i class="bi bi-trash"></i>
+                </a>
+              {% endif %}
+
+            </li>
+          {% empty %}
+            <li class="list-group-item text-muted text-center">
+              Sin documentos
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <!-- PROCESOS -->
+    <div class="col-md-4">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-header fw-semibold bg-light text-center">
+          ⚙️ Procesos de Trabajo
+        </div>
+
+        <ul class="list-group list-group-flush">
+          {% for doc in documentos_por_categoria.PROCESOS %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+
+              <a href="{{ doc.archivo.url }}" target="_blank">
+                <i class="bi bi-file-earmark-text me-2"></i>
+                {{ doc.titulo }}
+              </a>
+
+              {% if user.is_staff %}
+                <a
+                  href="{% url 'eliminar_documento' doc.id %}"
+                  class="btn btn-sm btn-outline-danger"
+                  onclick="return confirm('¿Eliminar este documento?');"
+                >
+                  <i class="bi bi-trash"></i>
+                </a>
+              {% endif %}
+
+            </li>
+          {% empty %}
+            <li class="list-group-item text-muted text-center">
+              Sin documentos
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <!-- BIENESTAR -->
+    <div class="col-md-4">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-header fw-semibold bg-light text-center">
+          💚 Bienestar
+        </div>
+
+        <ul class="list-group list-group-flush">
+          {% for doc in documentos_por_categoria.BIENESTAR %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+
+              <a href="{{ doc.archivo.url }}" target="_blank">
+                <i class="bi bi-file-earmark-text me-2"></i>
+                {{ doc.titulo }}
+              </a>
+
+              {% if user.is_staff %}
+                <a
+                  href="{% url 'eliminar_documento' doc.id %}"
+                  class="btn btn-sm btn-outline-danger"
+                  onclick="return confirm('¿Eliminar este documento?');"
+                >
+                  <i class="bi bi-trash"></i>
+                </a>
+              {% endif %}
+
+            </li>
+          {% empty %}
+            <li class="list-group-item text-muted text-center">
+              Sin documentos
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}

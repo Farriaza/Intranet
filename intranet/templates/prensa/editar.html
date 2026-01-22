@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Editar Noticia{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+  <h2 class="fw-bold mb-4 text-center">Editar Noticia</h2>
+
+  <div class="card shadow-sm p-4">
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+
+      <div class="text-end mt-3">
+        <a href="{% url 'prensa_panel' %}" class="btn btn-secondary">Volver</a>
+        <button class="btn btn-success">Actualizar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+  .card * {
+    color: rgb(26, 25, 25) !important;
+  }
+
+  .card input,
+  .card textarea,
+  .card select {
+    color: rgb(15, 15, 15) !important;
+    background-color: #f8f6f6 !important;
+    border: 1px solid #555;
+  }
+
+  .card input::placeholder,
+  .card textarea::placeholder {
+    color: #ddd !important;
+  }
+
+  .card label {
+    color: white !important;
+  }
+</style>
+
+{% endblock %}
